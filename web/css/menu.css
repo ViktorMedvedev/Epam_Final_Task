@@ -1,0 +1,36 @@
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.topmenu > li {
+    display: inline-block;
+    position: relative;
+}
+.topmenu > li:last-child {
+    margin-right: 0;
+}
+a {
+    display: block;
+    text-decoration: none;
+    outline: none;
+    transition: .5s linear;
+}
+.fa {
+    color: inherit;
+}
+.submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.menu .submenu {
+    display: none;
+    background: #b19891;
+}
+.menu ul li:hover .submenu {
+    display: block;
+}
