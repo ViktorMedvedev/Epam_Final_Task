@@ -36,7 +36,6 @@ public class MainController extends HttpServlet {
             }
         } catch (CommandException e) {
             request.getRequestDispatcher(JspAddr.ERROR_PAGE).forward(request, response);
-            e.printStackTrace();
         }
     }
 }

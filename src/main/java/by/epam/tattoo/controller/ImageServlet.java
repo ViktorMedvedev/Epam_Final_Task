@@ -1,8 +1,10 @@
 package main.java.by.epam.tattoo.controller;
 
 
+import main.java.by.epam.tattoo.service.OfferService;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.service.TattooService;
+import main.java.by.epam.tattoo.util.JspAddr;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,16 +26,22 @@ public class ImageServlet extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String imageId = request.getParameter("imageId");
-        TattooService service = new TattooService();
+        TattooService tattooService = new TattooService();
+        OfferService offerService = new OfferService();
+        byte[] imageData;
         try {
-            byte[] imageData = service.findTattooImage(imageId);
+            if (request.getParameter("table").equals("tattoo")) {
+                imageData = tattooService.findTattooImage(imageId);
+            }else {
+                imageData = offerService.findTattooImage(imageId);
+            }
             response.setContentType("image/jpeg");
             OutputStream os = response.getOutputStream();
             os.write(imageData);
             os.flush();
             os.close();
         } catch (ServiceException e) {
-            //ADD CODE!
+           request.getRequestDispatcher(JspAddr.ERROR_PAGE).forward(request, response);
         }
     }
 }

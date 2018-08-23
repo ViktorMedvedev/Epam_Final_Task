@@ -1,5 +1,6 @@
 package main.java.by.epam.tattoo.connection;
 
+import main.java.by.epam.tattoo.util.DataBaseInfo;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,32 +8,31 @@ import org.apache.logging.log4j.Logger;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
+import java.util.ResourceBundle;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
-    private static final String USER = "root";
-    private static final String PASSWORD = "1234";
-    private static final int    POOL_SIZE = 10;
-    private static final String URL =
-            "jdbc:mysql://localhost:3306/tattooparlor" +
-            "?autoReconnect=true" +
-            "&useSSL=false" +
-            "&useUnicode=true" +
-            "&useJDBCCompliantTimezoneShift=true" +
-            "&useLegacyDatetimeCode=false" +
-            "&serverTimezone=UTC";
+    private static final int POOL_SIZE = 10;
     private static Logger logger = LogManager.getLogger();
     private static ConnectionPool instance;
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ReentrantLock lock = new ReentrantLock();
+    private static String url;
+    private static String user;
+    private static String password;
     private LinkedBlockingQueue<ProxyConnection> freeConnections;
     private ArrayDeque<ProxyConnection> busyConnections;
 
     private ConnectionPool() {
         register();
+        initDatabase();
         initPool();
+    }
+
+    public int getFreeConnectionsSize() {
+        return freeConnections.size();
     }
 
     public static ConnectionPool getInstance() {
@@ -53,11 +53,20 @@ public class ConnectionPool {
 
     private void register() {
         try {
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
         } catch (SQLException e) {
             logger.fatal("Couldn't register driver" + e);
             throw new RuntimeException("Couldn't register driver", e);
         }
+    }
+    private void initDatabase() {
+//        ResourceBundle bundle = ResourceBundle.getBundle("/resources/database/database");
+//        url = bundle.getString("database.url");
+//        user = bundle.getString("database.user");
+//        password = bundle.getString("database.password");
+        url = DataBaseInfo.URL;
+        password=DataBaseInfo.PASSWORD;
+        user=DataBaseInfo.USER;
     }
 
     private void initPool() {
@@ -71,18 +80,18 @@ public class ConnectionPool {
             }
         }
         if (freeConnections.isEmpty()) {
-            logger.fatal("Couldn't init connection pool");
-            throw new RuntimeException("Couldn't init connection pool");
+            logger.fatal("Couldn't init connection connection");
+            throw new RuntimeException("Couldn't init connection connection");
         }
         if (freeConnections.size() == POOL_SIZE) {
-            logger.log(Level.INFO, "Successfully initialized connection pool");
+            logger.log(Level.INFO, "Successfully initialized connection connection");
         }
 
     }
 
     private void createConnection() throws ConnectionPoolException {
         try {
-            ProxyConnection connection = new ProxyConnection(DriverManager.getConnection(URL, USER, PASSWORD));
+            ProxyConnection connection = new ProxyConnection(DriverManager.getConnection(url, user, password));
             freeConnections.add(connection);
         } catch (SQLException e) {
             throw new ConnectionPoolException("Couldn't create connection", e);

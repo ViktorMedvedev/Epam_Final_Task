@@ -1,11 +1,10 @@
 package main.java.by.epam.tattoo.command;
 
-import main.java.by.epam.tattoo.entity.order.Order;
-import main.java.by.epam.tattoo.entity.tattoo.Tattoo;
-import main.java.by.epam.tattoo.entity.user.Role;
+import main.java.by.epam.tattoo.entity.Order;
+import main.java.by.epam.tattoo.entity.User;
 import main.java.by.epam.tattoo.service.OrderService;
+import main.java.by.epam.tattoo.service.PaginationUtil;
 import main.java.by.epam.tattoo.service.ServiceException;
-import main.java.by.epam.tattoo.service.TattooService;
 import main.java.by.epam.tattoo.util.JspAddr;
 import main.java.by.epam.tattoo.util.JspAttr;
 import org.apache.logging.log4j.Level;
@@ -21,20 +20,18 @@ public class OrderListCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        PaginationUtil<Order> paginationUtil = new PaginationUtil<>();
         HttpSession session = request.getSession();
-        String userRole = request.getParameter("role");
         ArrayList<Order> orders;
+        ArrayList<Order> ordersOnPage;
+        Object obj = session.getAttribute(JspAttr.USER);
+        User user = (User) obj;
+        OrderService orderService = new OrderService();
         try {
-            OrderService orderService = new OrderService();
-            if (userRole.equals(Role.ADMIN.toString())) {
-                orders = orderService.findAllOrders();
-            }else {
-                orders = orderService.findUserOrders(request.getParameter("userId"));
-            }
-            if (!orders.isEmpty()) {
-                session.setAttribute(JspAttr.ORDERS, orders);
-                return JspAddr.ORDER_TABLE;
-            }
+            orders = orderService.getOrderList(user);
+            ordersOnPage = paginationUtil.executePagination(request, orders);
+            session.setAttribute(JspAttr.ORDERS, ordersOnPage);
+            return JspAddr.ORDER_TABLE;
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
         }

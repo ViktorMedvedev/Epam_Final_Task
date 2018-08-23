@@ -1,14 +1,40 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
-@import "menu.css";
 
 body {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    background: url("../res/img/background.png") no-repeat;
-    background-attachment: fixed;
+    background: url("../res/img/background.png") no-repeat fixed;
     background-size: cover;
     min-height: 100vh;
+}
+
+.footer {
+    display: flex;
+    margin: 7vw 0 0 0;
+    bottom: 0;
+    width: 100%;
+    justify-content: center;
+    height: 3em;
+    padding: 0 1.5vw;
+    background-color: #000;
+    align-items: center;
+
+}
+
+.footer .info-tag-container {
+    margin: 0 auto;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1vw;
+    background-color: #000;
+
+}
+
+.footer .info-tag-container .info-line {
+    padding: 0 3vw;
 }
 
 .container {
@@ -41,9 +67,17 @@ body {
     padding-left: 0.3em;
     border: 0;
     margin: 1em;
-    margin-left: 0em;
-    margin-right: 0em;
+    margin-left: 0;
+    margin-right: 0;
     min-width: 20em;
+}
+
+.input-container input[type=number] {
+    padding: 0.3em 0;
+    padding-left: 0.3em;
+    border: 0;
+    margin: 0;
+    min-width: 18.75em;
 }
 
 .input-container input[type=submit] {
@@ -81,6 +115,7 @@ body {
 
 .header {
     display: flex;
+
     justify-content: space-between;
     height: 3em;
     padding: 0 1.5vw;
@@ -96,6 +131,16 @@ body {
 .header .logo-container input img {
     max-height: 100%;
     max-width: 100%;
+}
+
+.header select {
+    border: none;
+    min-width: 10em;
+
+}
+
+.header select[multiple]:focus option:checked {
+    background: #000;
 }
 
 .header .search {
@@ -151,23 +196,27 @@ body {
 
 /*КАРТОЧКА ТАТУ*/
 
-
-.tattoo-card-container{
+.tattoo-card-container {
     display: flex;
     flex-wrap: wrap;
-
+    justify-content: space-evenly;
 }
-
 
 .tatoo-card {
     width: 15vw;
     height: 25vw;
+    min-width: 210px;
+    min-height: 350px;
     background-color: white;
     margin: 20px 30px;
 
 }
 
-.tatoo-card .delete-button{
+.tattoo-card-button {
+    margin: 0;
+}
+
+.tatoo-card .delete-button {
     position: absolute;
     top: 0;
     left: 0;
@@ -181,10 +230,14 @@ body {
 }
 
 .tatoo-card .img-container {
-    width: 15vw;
-    height: 50%;
+    align-items: center;
+    width: 100%;
+    height: 60%;
     overflow: hidden;
     margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    background-color: #000;
 }
 
 .tatoo-card .img-container img.wide {
@@ -203,7 +256,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 50%;
+    height: 40%;
 }
 
 .info-container .info {
@@ -221,17 +274,18 @@ body {
 .info-container .info .info-line {
     font-size: 0.8em;
 }
-.info-container .info .author a{
+
+.info-container .info .author a {
     font-size: 0.8em;
     color: rgba(5, 202, 255, 1);
     transition: all 0.1s ease;
 }
 
-.info-container .info .author a:hover{
+.info-container .info .author a:hover {
     color: rgb(3, 114, 142);
 }
 
-.info-container .order-button{
+.info-container .order-button {
     background-color: rgba(5, 202, 255, 0.7);
     color: #fff;
     width: 100%;
@@ -243,7 +297,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.info-container .order-button:hover{
+.info-container .order-button:hover {
     background-color: rgba(5, 202, 255, 1);
 }
 
@@ -252,11 +306,13 @@ body {
     unicode-bidi: bidi-override;
     direction: rtl;
 }
+
 .rating > span {
     display: inline-block;
     position: relative;
     width: 1.1em;
 }
+
 .rating > span:hover:before,
 .rating > span:hover ~ span:before {
     color: #ffdd00;
@@ -264,21 +320,67 @@ body {
     position: absolute;
 }
 
+.page-number-container {
+    display: flex;
+    flex-direction: row;
+    margin: 1vw 0;
+    padding: 0 6vw;
+    text-transform: uppercase;
+}
+
+.page-number-container form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-number-container .page-number-blue {
+    color: #fff;
+    background-color: rgba(5, 202, 255, 0.7);
+    padding: 0.3em 0.8em;
+    height: 3em;
+    margin: 0.3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.page-number-container .page-number-blue:hover {
+    background-color: rgba(5, 202, 255, 1);
+}
+
+.page-number-container .page-number-gray {
+    color: #fff;
+    background-color: rgba(179, 179, 179, 0.7);
+    padding: 0.3em 0.8em;
+    height: 3em;
+    margin: 0.3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: default;
+    transition: all 0.3s ease;
+}
 
 /* ЗАКАЗЫ */
 
-.offer-card{
+.offer-card {
     width: 40%;
     height: 35vh;
 }
 
-.offer-card .info-container{
+.offer-card .info-container {
     height: 30vh;
     width: 100%;
     background-color: aqua;
 }
 
-.offer-card .button-container input{
+.offer-card .button-container input {
     height: 5vh;
     background-color: rgba(5, 202, 255, 0.7);
     width: 100%;
@@ -290,10 +392,9 @@ body {
     transition: all 0.3s ease;
 }
 
-.offer-card .button-container input:hover{
+.offer-card .button-container input:hover {
     background-color: rgba(5, 202, 255, 1);
 }
-
 
 /*ORDER*/
 .order-card-container {
@@ -306,11 +407,11 @@ body {
 
 .order-card-container .order-card {
     width: 140vh;
-    height: 70vh;
+    height: 80vh;
     display: flex;
 }
 
-.order-card_img-container{
+.order-card_img-container {
     width: 60%;
 }
 
@@ -322,46 +423,26 @@ body {
     overflow: hidden;
     margin: 0 auto;
     position: relative;
+    background-color: rgba(50, 50, 51, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-card_img-container img.photo {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.order-card_img-container img.photo.tall {
+    min-height: 70vh;
+}
+
+.order-card_img-container img.photo.wide {
+    min-width: 84vh;
 }
 
 .order-card_info-container {
-
-}
-
-.order-card_img-container img.blured{
-    position: relative;
-    top: -20px;
-    left: -20px;
-    filter: blur(10px);
-}
-
-.order-card_img-container img.blured.wide {
-    max-height: 120%;
-    height: auto;
-
-}
-
-.order-card_img-container img.blured.tall {
-    max-width: 120%;
-    width: auto;
-}
-
-.order-card_img-container img.photo{
-    max-height: 100%;
-    max-width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.order-card_img-container img.photo.tall{
-    transform: translate(50%, 0);
-}
-.order-card_img-container img.photo.wide{
-    transform: translate(0, 25%);
-}
-
-.order-card_info-container{
     background-color: rgba(50, 50, 51, 0.8);
     color: #fff;
     display: flex;
@@ -371,26 +452,27 @@ body {
     justify-content: space-evenly;
 }
 
-.order-card_info-container .title{
+.order-card_info-container .title {
     font-size: 2em;
     font-weight: bold;
     text-transform: uppercase;
 }
 
-.order-card_info-container .all-info span.info-line{
+.order-card_info-container .all-info span.info-line {
     display: block;
     margin: 1em 0;
 }
 
-.order-card_info-container .all-info span span.key{
+.order-card_info-container .all-info span span.key {
     font-weight: bold;
     text-transform: uppercase;
 }
-.order-card_info-container .all-info span span.key:after{
+
+.order-card_info-container .all-info span span.key:after {
     content: ':';
 }
 
-.order-card_info-container form input[type=submit]{
+.order-card_info-container form input[type=submit] {
     width: 100%;
     padding: 2em;
     text-transform: uppercase;
@@ -402,48 +484,48 @@ body {
     cursor: pointer;
 }
 
-.order-card_info-container form input[type=submit]:hover{
+.order-card_info-container form input[type=submit]:hover {
     background-color: rgba(5, 202, 255, 1);
 }
 
-.order-card_info-container form input[type=submit].gray{
+.order-card_info-container form input[type=submit].gray {
     background-color: rgba(179, 179, 179, 0.7);
 }
 
-.order-card_info-container form input[type=submit].gray:hover{
+.order-card_info-container form input[type=submit].gray:hover {
     background-color: rgba(179, 179, 179, 1);
 }
 
-.order-card_info-container .rating{
+.order-card_info-container .rating {
     font-size: 2em;
     text-align: left;
 }
 
-
 /*USER ROOM*/
 
-.user-cabinet-container{
+.user-cabinet-container {
     width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.user-cabinet-container .user-card-container{
+
+.user-cabinet-container .user-card-container {
     width: 80%;
-    height: 50%;
+    height: 65%;
     display: flex;
     flex-direction: column;
 }
 
-.user-cabinet-container .user-card-container .username{
+.user-cabinet-container .user-card-container .username {
     font-size: 2.5em;
     font-weight: bold;
     color: #fff;
     margin-bottom: 0.2em;
 }
 
-.user-cabinet-container .user-card-container .user-card{
+.user-cabinet-container .user-card-container .user-card {
     height: 80%;
     background-color: rgba(50, 50, 51, 0.5);
     color: #fff;
@@ -451,19 +533,19 @@ body {
 
 }
 
-.user-cabinet-container .user-card-container .user-card .info{
+.user-cabinet-container .user-card-container .user-card .info {
 
 }
 
-.user-cabinet-container .user-card-container .user-card .info .key{
+.user-cabinet-container .user-card-container .user-card .info .key {
     font-weight: bold;
 }
 
-.user-cabinet-container .user-card-container .user-card .info .key:after{
+.user-cabinet-container .user-card-container .user-card .info .key:after {
     content: ':';
 }
 
-.user-cabinet-container .user-card-container .user-card form input[type=submit]{
+.user-cabinet-container .user-card-container .user-card form input[type=submit] {
     width: 15em;
     padding: 2em;
     text-transform: uppercase;
@@ -474,40 +556,43 @@ body {
     cursor: pointer;
 }
 
-.user-cabinet-container .user-card-container .user-card .button-container{
+.user-cabinet-container .user-card-container .user-card .button-container {
     width: 100%;
-    height: 50%;
+    height: 30%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.user-cabinet-container .user-card-container .user-card form input[type=submit].blue{
+.user-cabinet-container .user-card-container .user-card form input[type=submit].blue {
     background-color: rgba(5, 202, 255, 0.7);
 }
 
-.user-cabinet-container .user-card-container .user-card form input[type=submit].blue:hover{
+.user-cabinet-container .user-card-container .user-card form input[type=submit].blue:hover {
     background-color: rgba(5, 202, 255, 1);
 }
 
-.user-cabinet-container .user-card-container .user-card form input[type=submit].gray{
+.user-cabinet-container .user-card-container .user-card form input[type=submit].gray {
     background-color: rgba(179, 179, 179, 0.7);
 }
 
-.user-cabinet-container .user-card-container .user-card form input[type=submit].gray:hover{
+.user-cabinet-container .user-card-container .user-card form input[type=submit].gray:hover {
     background-color: rgba(179, 179, 179, 1);
 }
 
 /*OFFER*/
-.offer-table input, .offer-table select{
-    min-width: 10em;
+.offer-offer-table input, .offer-offer-table select {
+    min-width: 13em;
+}
+
+.upload-offer-table input, .upload-offer-table select {
+    min-width: 18.75em;
 }
 
 .info-table-container {
     width: 80%;
+    height: 100%;
     margin: auto;
-    height: 50vh;
-    margin-top: 15vh;
     color: white;
 }
 
@@ -543,8 +628,7 @@ body {
     content: '%';
 }
 
-
-.info-table-container table td form input[type=submit]{
+.info-table-container table td form input[type=submit] {
     width: 100%;
     padding: 1em;
     text-transform: uppercase;
@@ -556,6 +640,35 @@ body {
     background-color: rgba(5, 202, 255, 0.7);
 }
 
-.info-table-container table td form input[type=submit]:hover{
+.info-table-container table td form input[type=submit]:hover {
+    background-color: rgba(5, 202, 255, 1);
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label {
+    text-align: center;
+    text-transform: uppercase;
+    padding: 0.5em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.95;
+    color: #fff;
+    font-size: 1em;
+    box-shadow: 0 0 0 #fff inset;
+    background-color: rgba(5, 202, 255, 0.7);
+}
+
+.inputfile:focus + label {
+}
+
+.inputfile + label:hover {
     background-color: rgba(5, 202, 255, 1);
 }

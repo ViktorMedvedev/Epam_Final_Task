@@ -5,7 +5,7 @@ import main.java.by.epam.tattoo.connection.ConnectionPoolException;
 import main.java.by.epam.tattoo.connection.ProxyConnection;
 import main.java.by.epam.tattoo.dao.AbstractDao;
 import main.java.by.epam.tattoo.dao.DaoException;
-import main.java.by.epam.tattoo.entity.order.Order;
+import main.java.by.epam.tattoo.entity.Order;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,18 +23,39 @@ public class OrderDao implements AbstractDao<Order> {
             "INSERT INTO orders (user_id, tattoo_id, totalprice) VALUES (?,?,?)";
     private static final String SQL_DELETE_ORDER =
             "DELETE FROM orders WHERE order_id = ?";
+    private static final String SQL_DELETE_ORDERS_BY_USER_ID =
+            "DELETE FROM orders WHERE user_id = ?";
+    private static final String SQL_UPDATE_ORDER =
+            "UPDATE orders SET id_status = ? WHERE order_id = ?";
     private static final String SQL_FIND_LAST_ADDED_ORDER =
-            "SELECT order_id, user_id, tattoo_id, totalprice, id_status FROM orders ORDER BY order_id DESC LIMIT 1";
+            "SELECT order_id, user_id, tattoo_id, totalprice, status_name \n" +
+                    "FROM orders \n" +
+                    "JOIN order_status ON orders.id_status = order_status.id_status \n" +
+                    "WHERE user_id = ? \n" +
+                    "ORDER BY order_id DESC LIMIT 1";
     private static final String SQL_FIND_ORDER_STATUS_ID_BY_NAME =
             "SELECT id_status FROM order_status WHERE status_name = ?";
-    private static final String SQL_FIND_ORDER_STATUS_NAME_BY_ID =
-            "SELECT status_name FROM order_status WHERE id_status = ?";
     private static final String SQL_FIND_ORDER_BY_TATTOO_AND_USER_ID =
-            "SELECT order_id, user_id, tattoo_id, totalprice, id_status FROM orders WHERE user_id = ? AND tattoo_id = ?";
+            "SELECT order_id, user_id, tattoo_id, totalprice, status_name \n" +
+                    "FROM orders \n" +
+                    "JOIN order_status ON orders.id_status = order_status.id_status " +
+                    "WHERE user_id = ? AND tattoo_id = ?";
+    private static final String SQL_FIND_ORDER_BY_ID =
+            "SELECT order_id, user_id, tattoo_id, totalprice, status_name \n" +
+                    "FROM orders \n" +
+                    "JOIN order_status ON orders.id_status = order_status.id_status " +
+                    "WHERE order_id = ?";
     private static final String SQL_SELECT_ALL_ORDERS =
-            "SELECT order_id, user_id, tattoo_id, totalprice, id_status FROM orders";
+            "select order_id, user_id, tattoo_id, totalprice, status_name \n" +
+                    "from orders \n" +
+                    "join order_status ON orders.id_status = order_status.id_status\n" +
+                    "ORDER BY orders.id_status ASC, order_id DESC";
     private static final String SQL_SELECT_ALL_USER_ORDERS =
-            "SELECT order_id, user_id, tattoo_id, totalprice, id_status FROM orders WHERE user_id = ?";
+            "SELECT order_id, user_id, tattoo_id, totalprice, status_name \n" +
+                    "FROM orders\n" +
+                    "JOIN order_status ON orders.id_status = order_status.id_status \n" +
+                    "WHERE user_id = ?\n" +
+                    "ORDER BY orders.id_status ASC, order_id DESC";
 
     public OrderDao() {
         pool = ConnectionPool.getInstance();
@@ -48,7 +69,7 @@ public class OrderDao implements AbstractDao<Order> {
             connection = pool.takeConnection();
             int userId = order.getUserId();
             int tattooId = order.getTattooId();
-            if (orderExists(connection, userId, tattooId)) {
+            if (findOrderByUserIdAndTattooId(userId, tattooId) != null) {
                 return null;
             }
             BigDecimal totalPrice = order.getTotalPrice();
@@ -57,10 +78,9 @@ public class OrderDao implements AbstractDao<Order> {
             preparedStatement.setInt(2, tattooId);
             preparedStatement.setBigDecimal(3, totalPrice);
             preparedStatement.executeUpdate();
-            return findLastAddedOrder(connection);
+            return findLastAddedOrder(userId);
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DaoException("Failed to add order", e);
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -80,11 +100,11 @@ public class OrderDao implements AbstractDao<Order> {
             preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_ORDERS);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                orders.add(createOrderFromQueryResult(connection, resultSet));
+                orders.add(createOrderFromQueryResult(resultSet));
             }
             return orders;
         } catch (SQLException e) {
-            throw new DaoException("Failed to add tattoo", e);
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -105,11 +125,12 @@ public class OrderDao implements AbstractDao<Order> {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                orders.add(createOrderFromQueryResult(connection, resultSet));
+                orders.add(createOrderFromQueryResult(resultSet));
             }
             return orders;
         } catch (SQLException e) {
-            throw new DaoException("Failed to add tattoo", e);
+            e.printStackTrace();
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -119,56 +140,81 @@ public class OrderDao implements AbstractDao<Order> {
         }
     }
 
-    private boolean orderExists(ProxyConnection connection, int userId, int tattooId) throws DaoException {
+    public Order findOrderByUserIdAndTattooId(int userId, int tattooId) throws DaoException {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
+        ProxyConnection connection = null;
         try {
+            connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(SQL_FIND_ORDER_BY_TATTOO_AND_USER_ID);
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, tattooId);
             resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
+            if (resultSet.next()) {
+                return createOrderFromQueryResult(resultSet);
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    public Order findOrderById(int orderId) throws DaoException {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        ProxyConnection connection = null;
+        try {
+            connection = pool.takeConnection();
+            preparedStatement = connection.prepareStatement(SQL_FIND_ORDER_BY_ID);
+            preparedStatement.setInt(1, orderId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return createOrderFromQueryResult(resultSet);
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    private Order findLastAddedOrder(int userId) throws DaoException {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        ProxyConnection connection = null;
+        try {
+            connection = pool.takeConnection();
+            preparedStatement = connection.prepareStatement(SQL_FIND_LAST_ADDED_ORDER);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return createOrderFromQueryResult(resultSet);
+            } else {
+                return null;
+            }
+
         } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
 
-    private Order findLastAddedOrder(ProxyConnection connection) throws DaoException {
+    private int findOrderStatusIdByName(String name) throws DaoException {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
+        ProxyConnection connection = null;
         try {
-            preparedStatement = connection.prepareStatement(SQL_FIND_LAST_ADDED_ORDER);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return createOrderFromQueryResult(connection, resultSet);
-            }
-            return null;
-        } catch (SQLException e) {
-            throw new DaoException("Failed", e);
-        }
-    }
-
-    private String findOrderStatusNameById(ProxyConnection connection, byte id) throws DaoException {
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        try {
-            preparedStatement = connection.prepareStatement(SQL_FIND_ORDER_STATUS_NAME_BY_ID);
-            preparedStatement.setByte(1, id);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getString(1);
-            } else {
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Failed", e);
-        }
-    }
-
-    private int findOrderStatusIdByName(ProxyConnection connection, String name) throws DaoException {
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        try {
+            connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(SQL_FIND_ORDER_STATUS_ID_BY_NAME);
             preparedStatement.setString(1, name);
             resultSet = preparedStatement.executeQuery();
@@ -178,19 +224,47 @@ public class OrderDao implements AbstractDao<Order> {
                 return -1;
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed", e);
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
         }
     }
 
-    private Order createOrderFromQueryResult(ProxyConnection connection, ResultSet resultSet) throws DaoException {
+    public boolean updateOrder(String status, int orderId) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement;
+        try {
+            connection = pool.takeConnection();
+            int statusId = findOrderStatusIdByName(status);
+            preparedStatement = connection.prepareStatement(SQL_UPDATE_ORDER);
+            preparedStatement.setInt(1, statusId);
+            preparedStatement.setInt(2, orderId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    private Order createOrderFromQueryResult(ResultSet resultSet) throws DaoException {
         try {
             return new Order(resultSet.getInt(1),
                     resultSet.getInt(2),
                     resultSet.getInt(3),
                     resultSet.getBigDecimal(4),
-                    findOrderStatusNameById(connection, resultSet.getByte(5)));
+                    resultSet.getString(5));
+
         } catch (SQLException e) {
-            throw new DaoException("Failed: ", e);
+            throw new DaoException(e);
         }
     }
 
@@ -202,10 +276,28 @@ public class OrderDao implements AbstractDao<Order> {
             connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(SQL_DELETE_ORDER);
             preparedStatement.setInt(1, order.getOrderId());
-            preparedStatement.executeUpdate();
-            return true;
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Failed ", e);
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    public boolean delete(int userId) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement;
+        try {
+            connection = pool.takeConnection();
+            preparedStatement = connection.prepareStatement(SQL_DELETE_ORDERS_BY_USER_ID);
+            preparedStatement.setInt(1, userId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);

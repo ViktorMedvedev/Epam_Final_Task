@@ -24,7 +24,9 @@
 
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<header>
+    <jsp:include page="/WEB-INF/jsp/header.jsp"/>
+</header>
 <c:choose>
     <c:when test="${not empty sessionScope.user}">
         <jsp:forward page="/home"/>
@@ -52,11 +54,10 @@
             <input class="button button-blue" type="submit" value=${button}>
             <br/>
             <c:choose>
-                <c:when test="${not empty sessionScope.wrongData}">
+                <c:when test="${not empty requestScope.wrongData}">
                     ${authFailMessage}
                 </c:when>
             </c:choose>
-
         </form>
         <form action="register">
             <input class="button button-gray" type="submit" value=${signUp}>
@@ -64,5 +65,8 @@
         </form>
     </div>
 </div>
+<footer>
+    <jsp:include page="/WEB-INF/jsp/footer.jsp"/>
+</footer>
 </body>
 </html>

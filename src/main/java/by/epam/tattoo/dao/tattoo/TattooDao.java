@@ -7,7 +7,7 @@ import main.java.by.epam.tattoo.connection.ConnectionPoolException;
 import main.java.by.epam.tattoo.connection.ProxyConnection;
 import main.java.by.epam.tattoo.dao.AbstractDao;
 import main.java.by.epam.tattoo.dao.DaoException;
-import main.java.by.epam.tattoo.entity.tattoo.Tattoo;
+import main.java.by.epam.tattoo.entity.Tattoo;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,37 +20,70 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TattooDao implements AbstractDao<Tattoo> {
     private static Logger logger = LogManager.getLogger();
     private final ConnectionPool pool;
     private static final String SQL_ADD_TATTOO =
-            "INSERT INTO tattoo (name, style_id, size_id, price, image) VALUES (?,?,?,?,?)";
-    private static final String SQL_SELECT_ALL_TATTOOS =
-            "SELECT tattoo_id, name, style_id, size_id, price, image, rating FROM tattoo";
+            "INSERT INTO tattoo (style_id, size_id, price, image) VALUES (?,?,?,?)";
+    private static final String SQL_ADD_TATTOO_RATE =
+            "INSERT INTO users_rated_tattoo (user_id, tattoo_id, rate) VALUES (?,?,?)";
+    private static final String SQL_FIND_RATE =
+            "SELECT rate FROM users_rated_tattoo where user_id = ? AND tattoo_id = ?";
 
-    private static final String SQL_FIND_TATTOO_STYLE_BY_ID =
-            "SELECT style_id FROM styles WHERE style_name = ?";
-    private static final String SQL_FIND_TATTOO_SIZE_BY_ID =
-            "SELECT size_id FROM sizes WHERE size_name = ?";
+    private static final String SQL_FIND_RATES_SUM =
+            "SELECT SUM(rate) FROM users_rated_tattoo WHERE tattoo_id = ?";
+    private static final String SQL_FIND_RATES_QUANTITY =
+            "SELECT COUNT(rate) FROM users_rated_tattoo WHERE tattoo_id = ?";
+    private static final String SQL_SELECT_ALL_TATTOOS =
+            "SELECT tattoo_id, style_name, size_name, price, image, rating \n" +
+                    "FROM tattoo \n" +
+                    "JOIN styles ON tattoo.style_id = styles.style_id \n" +
+                    "JOIN sizes ON tattoo.size_id = sizes.size_id ORDER BY tattoo_id DESC";
 
     private static final String SQL_FIND_TATTOO_STYLE_ID_BY_NAME =
-            "SELECT style_name FROM styles WHERE style_id = ?";
+            "SELECT style_id FROM styles WHERE style_name = ?";
     private static final String SQL_FIND_TATTOO_SIZE_ID_BY_NAME =
-            "SELECT size_name FROM sizes WHERE size_id = ?";
+            "SELECT size_id FROM sizes WHERE size_name = ?";
 
     private static final String SQL_FIND_TATTOO_BY_ID =
-            "SELECT tattoo_id, name, style_id, size_id, price, image, rating FROM tattoo WHERE tattoo_id = ?";
+            "select tattoo_id, style_name, size_name, price, image, rating \n" +
+                    "FROM tattoo \n" +
+                    "JOIN styles on tattoo.style_id = styles.style_id \n" +
+                    "JOIN sizes on tattoo.size_id = sizes.size_id \n" +
+                    "WHERE tattoo_id = ?";
 
     private static final String SQL_FIND_TATTOO_IMAGE_BY_ID =
             "SELECT image FROM tattoo WHERE tattoo_id = ?";
+    private static final String SQL_FIND_TATTOO_BY_SIZE =
+            "select tattoo_id, style_name, size_name, price, image, rating \n" +
+                    "FROM tattoo \n" +
+                    "JOIN styles ON tattoo.style_id = styles.style_id \n" +
+                    "JOIN sizes ON tattoo.size_id = sizes.size_id \n" +
+                    "WHERE sizes.size_name = ?";
+    private static final String SQL_FIND_TATTOO_BY_STYLE =
+            "select tattoo_id, style_name, size_name, price, image, rating \n" +
+                    "FROM tattoo \n" +
+                    "JOIN styles ON tattoo.style_id = styles.style_id \n" +
+                    "JOIN sizes ON tattoo.size_id = sizes.size_id \n" +
+                    "WHERE styles.style_name = ?";
+    private static final String SQL_FIND_TATTOO_BY_STYLE_AND_SIZE =
+            "select tattoo_id, style_name, size_name, price, image, rating \n" +
+                    "FROM tattoo \n" +
+                    "JOIN styles ON tattoo.style_id = styles.style_id \n" +
+                    "JOIN sizes ON tattoo.size_id = sizes.size_id \n" +
+                    "WHERE styles.style_name = ? and sizes.size_name = ?";
 
     private static final String SQL_FIND_LAST_ADDED_TATTOO =
-            "SELECT tattoo_id, name, style_id, size_id, price, image, rating FROM tattoo ORDER BY tattoo_id DESC LIMIT 1";
+            "SELECT tattoo_id, style_name, size_name, price, image, rating \n" +
+                    "FROM tattoo \n" +
+                    "JOIN styles ON tattoo.style_id = styles.style_id \n" +
+                    "JOIN sizes ON tattoo.size_id = sizes.size_id ORDER BY tattoo_id DESC LIMIT 1";
 
     private static final String SQL_DELETE_TATTOO =
             "DELETE FROM tattoo WHERE tattoo_id = ?";
+    private static final String SQL_UPDATE_TATTOO_RATING =
+            "UPDATE tattoo SET rating = ? WHERE tattoo_id = ?";
 
     public TattooDao() {
         pool = ConnectionPool.getInstance();
@@ -62,22 +95,19 @@ public class TattooDao implements AbstractDao<Tattoo> {
         PreparedStatement preparedStatement;
         try {
             connection = pool.takeConnection();
-            String name = tattoo.getName();
             String style = tattoo.getStyle();
             String size = tattoo.getSize();
             BigDecimal price = tattoo.getPrice();
             InputStream stream = new ByteArrayInputStream(tattoo.getImageBytes());
             preparedStatement = connection.prepareStatement(SQL_ADD_TATTOO);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, style);
-            preparedStatement.setString(3, size);
-            preparedStatement.setBigDecimal(4, price);
-            preparedStatement.setBlob(5, stream);
+            preparedStatement.setInt(1, findTattooStyleIdByName(style));
+            preparedStatement.setInt(2, findTattooSizeIdByName(size));
+            preparedStatement.setBigDecimal(3, price);
+            preparedStatement.setBlob(4, stream);
             preparedStatement.executeUpdate();
-            return findLastAddedTattoo(connection);
-
+            return findLastAddedTattoo();
         } catch (SQLException e) {
-            throw new DaoException("Failed to add tattoo", e);
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -97,11 +127,70 @@ public class TattooDao implements AbstractDao<Tattoo> {
             preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_TATTOOS);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                tattoos.add(createTattooFromQueryResult(connection, resultSet));
+                tattoos.add(createTattooFromQueryResult(resultSet));
             }
             return tattoos;
         } catch (SQLException e) {
-            throw new DaoException("Failed to add tattoo", e);
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    public ArrayList<Tattoo> findTattoosByStyle(String style) throws DaoException {
+        return getTattoosByParameter(style, SQL_FIND_TATTOO_BY_STYLE);
+    }
+
+    public ArrayList<Tattoo> findTattoosBySize(String size) throws DaoException {
+        return getTattoosByParameter(size, SQL_FIND_TATTOO_BY_SIZE);
+    }
+
+    private ArrayList<Tattoo> getTattoosByParameter(String size, String sqlFindTattooBySize) throws DaoException {
+        ArrayList<Tattoo> tattoos = new ArrayList<>();
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        try {
+            connection = pool.takeConnection();
+            preparedStatement = connection.prepareStatement(sqlFindTattooBySize);
+            preparedStatement.setString(1, size);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                tattoos.add(createTattooFromQueryResult(resultSet));
+            }
+            return tattoos;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    public ArrayList<Tattoo> findTattoosByStyleAndSize(String style, String size) throws DaoException {
+        ArrayList<Tattoo> tattoos = new ArrayList<>();
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        try {
+            connection = pool.takeConnection();
+            preparedStatement = connection.prepareStatement(SQL_FIND_TATTOO_BY_STYLE_AND_SIZE);
+            preparedStatement.setString(1, style);
+            preparedStatement.setString(2, size);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                tattoos.add(createTattooFromQueryResult(resultSet));
+            }
+            return tattoos;
+        } catch (SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -121,11 +210,11 @@ public class TattooDao implements AbstractDao<Tattoo> {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return createTattooFromQueryResult(connection, resultSet);
+                return createTattooFromQueryResult(resultSet);
             }
             return null;
         } catch (SQLException e) {
-            throw new DaoException("Failed", e);
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -150,7 +239,7 @@ public class TattooDao implements AbstractDao<Tattoo> {
             }
             return null;
         } catch (SQLException e) {
-            throw new DaoException("Failed", e);
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);
@@ -160,42 +249,20 @@ public class TattooDao implements AbstractDao<Tattoo> {
         }
     }
 
-    private String findTattooStyleById(ProxyConnection connection, int id) throws DaoException {
-        return findTattooParameterNameById(connection, (byte) id, SQL_FIND_TATTOO_STYLE_ID_BY_NAME);
+    private int findTattooStyleIdByName(String name) throws DaoException {
+        return findTattooParameterIdByName(name, SQL_FIND_TATTOO_STYLE_ID_BY_NAME);
     }
 
-    private String findTattooSizeById(ProxyConnection connection, int id) throws DaoException {
-        return findTattooParameterNameById(connection, (byte) id, SQL_FIND_TATTOO_SIZE_ID_BY_NAME);
+    private int findTattooSizeIdByName(String name) throws DaoException {
+        return findTattooParameterIdByName(name, SQL_FIND_TATTOO_SIZE_ID_BY_NAME);
     }
 
-    private String findTattooParameterNameById(ProxyConnection connection, byte id, String sqlFindTattooStyleIdByName) throws DaoException {
+    private int findTattooParameterIdByName(String name, String sqlFindTattooSizeIdByName) throws DaoException {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
+        ProxyConnection connection = null;
         try {
-            preparedStatement = connection.prepareStatement(sqlFindTattooStyleIdByName);
-            preparedStatement.setByte(1, id);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getString(1);
-            }
-            return null;
-        } catch (SQLException e) {
-            throw new DaoException("Failed", e);
-        }
-    }
-
-    private int findTattooStyleIdByName(ProxyConnection connection, String name) throws DaoException {
-        return findTattooParameterIdByName(connection, name, SQL_FIND_TATTOO_STYLE_ID_BY_NAME);
-    }
-
-    private int findTattooSizeIdByName(ProxyConnection connection, String name) throws DaoException {
-        return findTattooParameterIdByName(connection, name, SQL_FIND_TATTOO_SIZE_ID_BY_NAME);
-    }
-
-    private int findTattooParameterIdByName(ProxyConnection connection, String name, String sqlFindTattooSizeIdByName) throws DaoException {
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        try {
+            connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(sqlFindTattooSizeIdByName);
             preparedStatement.setString(1, name);
             resultSet = preparedStatement.executeQuery();
@@ -204,36 +271,127 @@ public class TattooDao implements AbstractDao<Tattoo> {
             }
             return -1;
         } catch (SQLException e) {
-            throw new DaoException("Failed", e);
+            throw new DaoException(e);
+        }finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
         }
     }
 
-    private Tattoo createTattooFromQueryResult(ProxyConnection connection, ResultSet resultSet) throws DaoException {
+    public boolean addRate(int userId, int tattooId, int rate) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement;
+        try {
+            connection = pool.takeConnection();
+            if (hasAlreadyRated(userId, tattooId)) {
+                return false;
+            }
+            preparedStatement = connection.prepareStatement(SQL_ADD_TATTOO_RATE);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, tattooId);
+            preparedStatement.setInt(3, rate);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    public boolean hasAlreadyRated(int userId, int tattooId) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        try {
+            connection = pool.takeConnection();
+            preparedStatement = connection.prepareStatement(SQL_FIND_RATE);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, tattooId);
+            resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    public int findRatesSum(int tattooId) throws DaoException {
+        return findRatesParameter(tattooId, SQL_FIND_RATES_SUM);
+    }
+
+    public int findRatesQuantity(int tattooId) throws DaoException {
+        return findRatesParameter(tattooId, SQL_FIND_RATES_QUANTITY);
+    }
+
+    private int findRatesParameter(int tattooId, String sqlFindRatesQuantity) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        try {
+            connection = pool.takeConnection();
+            preparedStatement = connection.prepareStatement(sqlFindRatesQuantity);
+            preparedStatement.setInt(1, tattooId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+            return -1;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    private Tattoo createTattooFromQueryResult(ResultSet resultSet) throws DaoException {
         try {
             return new Tattoo(resultSet.getInt(1),
                     resultSet.getString(2),
-                    findTattooStyleById(connection, resultSet.getByte(3)),
-                    findTattooSizeById(connection, resultSet.getByte(4)),
-                    resultSet.getBigDecimal(5),
-                    resultSet.getBinaryStream(6).readAllBytes(),
-                    resultSet.getBigDecimal(7));
+                    resultSet.getString(3),
+                    resultSet.getBigDecimal(4),
+                    resultSet.getBinaryStream(5).readAllBytes(),
+                    resultSet.getBigDecimal(6));
         } catch (IOException | SQLException e) {
             throw new DaoException("Failed to add tattoo", e);
         }
     }
 
-    private Tattoo findLastAddedTattoo(ProxyConnection connection) throws DaoException {
+    private Tattoo findLastAddedTattoo() throws DaoException {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
+        ProxyConnection connection = null;
         try {
+            connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(SQL_FIND_LAST_ADDED_TATTOO);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return createTattooFromQueryResult(connection, resultSet);
+                return createTattooFromQueryResult(resultSet);
             }
             return null;
         } catch (SQLException e) {
-            throw new DaoException("Failed", e);
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
         }
     }
 
@@ -245,10 +403,29 @@ public class TattooDao implements AbstractDao<Tattoo> {
             connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(SQL_DELETE_TATTOO);
             preparedStatement.setInt(1, tattoo.getId());
-            preparedStatement.executeUpdate();
-            return true;
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Failed ", e);
+            throw new DaoException(e);
+        } finally {
+            try {
+                pool.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                logger.log(Level.ERROR, "Error: ", e);
+            }
+        }
+    }
+
+    public boolean updateRating(int tattooId, BigDecimal rating) throws DaoException {
+        ProxyConnection connection = null;
+        PreparedStatement preparedStatement;
+        try {
+            connection = pool.takeConnection();
+            preparedStatement = connection.prepareStatement(SQL_UPDATE_TATTOO_RATING);
+            preparedStatement.setBigDecimal(1, rating);
+            preparedStatement.setInt(2, tattooId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException(e);
         } finally {
             try {
                 pool.releaseConnection(connection);

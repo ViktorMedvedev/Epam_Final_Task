@@ -8,10 +8,14 @@ public interface JspAttr {
     String TATTOOS = "tattoos";
     String TATTOO = "tattoo";
     String ORDER = "order";
+    String OFFER = "offer";
     String ORDERS = "orders";
-    String CHANGED_LOCALE = "changedLocale";
-    String CHANGED_PASSWORD = "changedPassword";
-    String REGISTERED= "registered";
-    String SIGNED_IN= "signedIn";
+    String OFFERS = "offers";
+    String USERS = "users";
+    String MESSAGE = "message";
+    String USER_FROM_TABLE = "userFromTable";
+    String HAS_ALREADY_RATED = "hasRated";
+
+
 }
 

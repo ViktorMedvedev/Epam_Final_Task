@@ -1,11 +1,13 @@
 package main.java.by.epam.tattoo.command;
 
-import main.java.by.epam.tattoo.entity.order.Order;
+import main.java.by.epam.tattoo.entity.Order;
+import main.java.by.epam.tattoo.entity.Tattoo;
+import main.java.by.epam.tattoo.entity.User;
 import main.java.by.epam.tattoo.service.OrderService;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.util.JspAddr;
 import main.java.by.epam.tattoo.util.JspAttr;
-import main.java.by.epam.tattoo.util.JspParam;
+import main.java.by.epam.tattoo.util.JspAttrVal;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,16 +21,20 @@ public class RegisterOrderCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        String userId = request.getParameter(JspParam.USER_ID);
-        String tattooId = request.getParameter(JspParam.TATTOO_ID);
+        Object userObj = session.getAttribute(JspAttr.USER);
+        Object tattooObj = session.getAttribute(JspAttr.TATTOO);
+        User user = (User) userObj;
+        Tattoo tattoo = (Tattoo)tattooObj;
+        int userId = user.getId();
+        int tattooId = tattoo.getId();
+        OrderService service = new OrderService();
         try {
-            OrderService service = new OrderService();
             Order order = service.registerOrder(userId, tattooId);
             if (order != null) {
-                session.setAttribute(JspAttr.ORDER, "success");
-                return JspAddr.MESSAGE_PAGE;
+                session.setAttribute(JspAttr.ORDER, order);
+                return JspAddr.TATTOO_PAGE;
             }
-            session.setAttribute(JspAttr.ORDER, "fail");
+            request.setAttribute(JspAttr.MESSAGE, JspAttrVal.ORDER_FAIL);
             return JspAddr.MESSAGE_PAGE;
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
