@@ -26,14 +26,6 @@ public class TattooService {
 
     }
 
-    public ArrayList<Tattoo> findAllTattoos() throws ServiceException {
-        try {
-            return dao.findAllTattoos();
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
     public ArrayList<Tattoo> findTattoosByParameter(String style, String size) throws ServiceException {
         ArrayList<Tattoo> tattoos;
         try {

@@ -35,7 +35,7 @@ public class UploadFileServlet extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         OfferService service = new OfferService();
-        String userParam = request.getParameter("user");
+        String userParam = request.getParameter(JspAttr.USER);
         Part filePart = request.getPart(JspParam.IMAGE_FILE);
         InputStream fileContent = filePart.getInputStream();
         byte[] fileAsByteArray = fileContent.readAllBytes();

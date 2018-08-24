@@ -192,7 +192,7 @@ public class OrderDao implements AbstractDao<Order> {
     private Order findLastAddedOrder(int userId) throws DaoException {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
-        ProxyConnection connection = null;
+        ProxyConnection connection;
         try {
             connection = pool.takeConnection();
             preparedStatement = connection.prepareStatement(SQL_FIND_LAST_ADDED_ORDER);

@@ -6,7 +6,6 @@ import main.java.by.epam.tattoo.connection.ProxyConnection;
 import main.java.by.epam.tattoo.dao.AbstractDao;
 import main.java.by.epam.tattoo.dao.DaoException;
 import main.java.by.epam.tattoo.entity.Offer;
-import main.java.by.epam.tattoo.entity.Tattoo;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
