@@ -3,6 +3,7 @@ package main.java.by.epam.tattoo.command;
 import main.java.by.epam.tattoo.entity.Order;
 import main.java.by.epam.tattoo.service.OrderService;
 import main.java.by.epam.tattoo.service.ServiceException;
+import main.java.by.epam.tattoo.util.AccessChecker;
 import main.java.by.epam.tattoo.util.JspAddr;
 import main.java.by.epam.tattoo.util.JspAttr;
 import main.java.by.epam.tattoo.util.JspParam;
@@ -18,6 +19,9 @@ public class UpdateOrderCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        if (AccessChecker.checkForUserSession(request)){
+            return JspAddr.HOME_PAGE;
+        }
         HttpSession session = request.getSession();
         String status = request.getParameter(JspParam.STATUS);
         OrderService orderService = new OrderService();

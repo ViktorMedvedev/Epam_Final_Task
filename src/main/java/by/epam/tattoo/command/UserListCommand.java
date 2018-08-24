@@ -1,7 +1,8 @@
 package main.java.by.epam.tattoo.command;
 
 import main.java.by.epam.tattoo.entity.User;
-import main.java.by.epam.tattoo.service.PaginationUtil;
+import main.java.by.epam.tattoo.util.AccessChecker;
+import main.java.by.epam.tattoo.util.PaginationUtil;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.service.UserService;
 import main.java.by.epam.tattoo.util.JspAddr;
@@ -19,6 +20,9 @@ public class UserListCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        if (AccessChecker.checkForUserSession(request)){
+            return JspAddr.HOME_PAGE;
+        }
         PaginationUtil<User> paginationUtil = new PaginationUtil<>();
         HttpSession session = request.getSession();
         session.removeAttribute(JspAttr.USERS);

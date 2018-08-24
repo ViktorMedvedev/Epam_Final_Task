@@ -3,7 +3,7 @@ package main.java.by.epam.tattoo.command;
 import main.java.by.epam.tattoo.entity.Order;
 import main.java.by.epam.tattoo.entity.User;
 import main.java.by.epam.tattoo.service.OrderService;
-import main.java.by.epam.tattoo.service.PaginationUtil;
+import main.java.by.epam.tattoo.util.PaginationUtil;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.util.JspAddr;
 import main.java.by.epam.tattoo.util.JspAttr;

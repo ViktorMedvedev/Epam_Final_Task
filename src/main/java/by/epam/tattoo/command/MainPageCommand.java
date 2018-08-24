@@ -1,7 +1,7 @@
 package main.java.by.epam.tattoo.command;
 
 import main.java.by.epam.tattoo.entity.Tattoo;
-import main.java.by.epam.tattoo.service.PaginationUtil;
+import main.java.by.epam.tattoo.util.PaginationUtil;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.service.TattooService;
 import main.java.by.epam.tattoo.util.*;

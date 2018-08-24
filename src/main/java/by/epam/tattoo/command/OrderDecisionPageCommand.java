@@ -7,6 +7,7 @@ import main.java.by.epam.tattoo.service.OrderService;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.service.TattooService;
 import main.java.by.epam.tattoo.service.UserService;
+import main.java.by.epam.tattoo.util.AccessChecker;
 import main.java.by.epam.tattoo.util.JspAddr;
 import main.java.by.epam.tattoo.util.JspAttr;
 import main.java.by.epam.tattoo.util.JspParam;
@@ -22,6 +23,9 @@ public class OrderDecisionPageCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        if (AccessChecker.checkForUserSession(request)){
+            return JspAddr.HOME_PAGE;
+        }
         HttpSession session = request.getSession();
         session.removeAttribute(JspAttr.ORDER);
         String tattooId = request.getParameter(JspParam.TATTOO_ID);

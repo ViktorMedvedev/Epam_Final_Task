@@ -2,7 +2,8 @@ package main.java.by.epam.tattoo.command;
 
 import main.java.by.epam.tattoo.entity.Offer;
 import main.java.by.epam.tattoo.service.OfferService;
-import main.java.by.epam.tattoo.service.PaginationUtil;
+import main.java.by.epam.tattoo.util.AccessChecker;
+import main.java.by.epam.tattoo.util.PaginationUtil;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.util.JspAddr;
 import main.java.by.epam.tattoo.util.JspAttr;
@@ -19,6 +20,9 @@ public class OfferListCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        if (AccessChecker.checkForUserSession(request)){
+            return JspAddr.HOME_PAGE;
+        }
         PaginationUtil<Offer> paginationUtil = new PaginationUtil<>();
         HttpSession session = request.getSession();
         ArrayList<Offer> offers;

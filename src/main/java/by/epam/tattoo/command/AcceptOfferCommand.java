@@ -3,10 +3,7 @@ package main.java.by.epam.tattoo.command;
 import main.java.by.epam.tattoo.entity.Offer;
 import main.java.by.epam.tattoo.service.OfferService;
 import main.java.by.epam.tattoo.service.ServiceException;
-import main.java.by.epam.tattoo.util.JspAddr;
-import main.java.by.epam.tattoo.util.JspAttr;
-import main.java.by.epam.tattoo.util.JspAttrVal;
-import main.java.by.epam.tattoo.util.JspParam;
+import main.java.by.epam.tattoo.util.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +16,9 @@ public class AcceptOfferCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        if (AccessChecker.checkForUserSession(request)){
+            return JspAddr.HOME_PAGE;
+        }
         HttpSession session = request.getSession();
         OfferService offerService = new OfferService();
         String style = request.getParameter(JspParam.STYLE);

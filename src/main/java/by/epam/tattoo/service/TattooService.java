@@ -87,9 +87,16 @@ public class TattooService {
     }
 
 
-    public boolean updateTattooRating(Tattoo tattoo, User user, String rating) throws ServiceException {
+    public boolean updateTattooRating(Tattoo tattoo, User user, String ratingString) throws ServiceException {
         try {
-            dao.addRate(user.getId(), tattoo.getId(), Integer.parseInt(rating));
+            int rating = Integer.parseInt(ratingString);
+            if (rating < 1) {
+                rating = 1;
+            }
+            if (rating > 5) {
+                rating = 5;
+            }
+            dao.addRate(user.getId(), tattoo.getId(), rating);
             BigDecimal newRating = countRating(tattoo);
             return dao.updateRating(tattoo.getId(), newRating);
         } catch (DaoException e) {

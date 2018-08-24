@@ -22,7 +22,7 @@
     <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 </header>
 <c:choose>
-    <c:when test="${empty sessionScope.user}">
+    <c:when test="${empty sessionScope.user || sessionScope.user.role == 'USER'}">
         <jsp:forward page="/login"/>
     </c:when>
 </c:choose>

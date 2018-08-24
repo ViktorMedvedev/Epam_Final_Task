@@ -28,7 +28,6 @@
         <jsp:forward page="/login"/>
     </c:when>
 </c:choose>
-
 <div class="info-table-container">
     <div class="info-table">
         <p>${pageTitle}:</p>

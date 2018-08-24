@@ -3,6 +3,7 @@ package main.java.by.epam.tattoo.command;
 import main.java.by.epam.tattoo.entity.User;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.service.UserService;
+import main.java.by.epam.tattoo.util.AccessChecker;
 import main.java.by.epam.tattoo.util.JspAddr;
 import main.java.by.epam.tattoo.util.JspAttr;
 import main.java.by.epam.tattoo.util.JspParam;
@@ -19,6 +20,9 @@ public class ChangeUserRoleCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        if (!AccessChecker.checkForAdminSession(request)){
+            return JspAddr.HOME_PAGE;
+        }
         HttpSession session = request.getSession();
         UserService userService = new UserService();
         ArrayList<User> users;

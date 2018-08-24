@@ -3,6 +3,7 @@ package main.java.by.epam.tattoo.command;
 import main.java.by.epam.tattoo.entity.Tattoo;
 import main.java.by.epam.tattoo.service.ServiceException;
 import main.java.by.epam.tattoo.service.TattooService;
+import main.java.by.epam.tattoo.util.AccessChecker;
 import main.java.by.epam.tattoo.util.JspAddr;
 import main.java.by.epam.tattoo.util.JspAttr;
 import main.java.by.epam.tattoo.util.JspParam;
@@ -18,6 +19,9 @@ public class DeleteTattooPageCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
+        if (AccessChecker.checkForUserSession(request)){
+            return JspAddr.HOME_PAGE;
+        }
         HttpSession session = request.getSession();
         String id = request.getParameter(JspParam.TATTOO_ID);
         try {
