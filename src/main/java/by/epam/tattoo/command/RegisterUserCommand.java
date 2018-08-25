@@ -17,13 +17,13 @@ public class RegisterUserCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         String email = request.getParameter(JspParam.EMAIL)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         String login = request.getParameter(JspParam.LOGIN)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         String password = request.getParameter(JspParam.PASSWORD)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         String confirmPassword = request.getParameter(JspParam.CONFIRM_PASSWORD)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         try {
             if (!password.equals(confirmPassword)){
                 request.setAttribute(JspAttr.WRONG_DATA, JspAttrVal.PASSWORD_DOES_NOT_MATCH);

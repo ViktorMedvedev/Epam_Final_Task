@@ -20,13 +20,14 @@ public class ChangePasswordCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        String login = request.getParameter(JspParam.LOGIN);
+        User userFromSession = (User)session.getAttribute(JspAttr.USER);
+        String login = userFromSession.getLogin();
         String oldPassword = request.getParameter(JspParam.OLD_PASSWORD)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         String newPassword = request.getParameter(JspParam.NEW_PASSWORD)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         String confirmPassword= request.getParameter(JspParam.CONFIRM_PASSWORD)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         try {
             if (!newPassword.equals(confirmPassword)){
                 request.setAttribute(JspAttr.WRONG_DATA, JspAttrVal.PASSWORD_DOES_NOT_MATCH);

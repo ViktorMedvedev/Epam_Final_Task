@@ -22,9 +22,9 @@ public class LoginCommand implements Command {
     public String execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
         String login = request.getParameter(JspParam.LOGIN)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         String password = request.getParameter(JspParam.PASSWORD)
-                .replace("<", "").replace(">","");
+                .replace("<", "|").replace(">","|");
         try {
             UserService service = new UserService();
             User user = service.loginUser(login, password);
