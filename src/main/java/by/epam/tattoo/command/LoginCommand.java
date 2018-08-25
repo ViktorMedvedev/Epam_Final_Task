@@ -21,8 +21,10 @@ public class LoginCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        String login = request.getParameter(JspParam.LOGIN);
-        String password = request.getParameter(JspParam.PASSWORD);
+        String login = request.getParameter(JspParam.LOGIN)
+                .replace("<", "").replace(">","");
+        String password = request.getParameter(JspParam.PASSWORD)
+                .replace("<", "").replace(">","");
         try {
             UserService service = new UserService();
             User user = service.loginUser(login, password);
