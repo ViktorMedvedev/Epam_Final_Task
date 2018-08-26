@@ -7,9 +7,13 @@ import main.java.by.epam.tattoo.util.JspParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class PaginationUtil<T extends Entity> {
+    private static final String NUMBER_REGEX = "^\\d+$";
+
     private ArrayList<T> showRecordsOnPage(ArrayList<T> list, int page, int recordsPerPage) {
         int listLength = list.size();
         int begin = (page - 1) * recordsPerPage;
@@ -25,17 +29,21 @@ public class PaginationUtil<T extends Entity> {
 
     public ArrayList<T> executePagination(HttpServletRequest request, ArrayList<T> list) {
         HttpSession session = request.getSession();
+        String pageString = request.getParameter(JspParam.PAGE);
         int page = 1;
         int recordsPerPage = ConstantHeap.RECORDS_PER_PAGE;
         int noOfRecords = list.size();
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-        if (request.getParameter(JspParam.PAGE) != null) {
-            page = Integer.parseInt(request.getParameter(JspParam.PAGE));
-            if (page < 1) {
+        if (pageString != null) {
+            Pattern pattern = Pattern.compile(NUMBER_REGEX);
+            Matcher matcher = pattern.matcher(pageString);
+            if (matcher.matches()) {
+                page = Integer.parseInt(pageString);
+                if (page > noOfPages) {
+                    page = noOfPages;
+                }
+            }else {
                 page = 1;
-            }
-            if (page > noOfPages) {
-                page = noOfPages;
             }
         }
         session.setAttribute(JspParam.NUMBER_OF_PAGES, noOfPages);
