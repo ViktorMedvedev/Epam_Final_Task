@@ -93,7 +93,6 @@ public class User extends Entity {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, email, login, password, role, discountPct);
     }
 

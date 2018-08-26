@@ -1,7 +1,7 @@
 package main.java.by.epam.tattoo.service;
 
 import main.java.by.epam.tattoo.dao.DaoException;
-import main.java.by.epam.tattoo.dao.tattoo.TattooDao;
+import main.java.by.epam.tattoo.dao.impl.TattooDaoImpl;
 import main.java.by.epam.tattoo.entity.Tattoo;
 import main.java.by.epam.tattoo.entity.User;
 import main.java.by.epam.tattoo.util.ConstantHeap;
@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class TattooService {
-    private TattooDao dao = new TattooDao();
+    private TattooDaoImpl dao = new TattooDaoImpl();
 
     public Tattoo registerTattoo(String style, String size, String price, byte[] image) throws ServiceException {
         if (style.isEmpty() || size.isEmpty() || price.isEmpty()) {
@@ -96,9 +96,12 @@ public class TattooService {
             if (rating > 5) {
                 rating = 5;
             }
-            dao.addRate(user.getId(), tattoo.getId(), rating);
-            BigDecimal newRating = countRating(tattoo);
-            return dao.updateRating(tattoo.getId(), newRating);
+            boolean addRate = dao.addRate(user.getId(), tattoo.getId(), rating);
+            if (addRate) {
+                BigDecimal newRating = countRating(tattoo);
+                return dao.updateRating(tattoo.getId(), newRating);
+            }
+            return false;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

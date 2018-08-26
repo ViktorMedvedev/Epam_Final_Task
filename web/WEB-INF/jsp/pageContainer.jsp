@@ -16,6 +16,9 @@
 </head>
 <body>
 <div class="page-number-container">
+    <c:if test="${empty requestScope.page}">
+        ${requestScope.page = 1}
+    </c:if>
     <c:if test="${requestScope.page > 1}">
         <form action="app">
             <input type="hidden" name="command" value="home">

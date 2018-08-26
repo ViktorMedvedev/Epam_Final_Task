@@ -1,5 +1,14 @@
 package main.java.by.epam.tattoo.command;
 
+import main.java.by.epam.tattoo.command.admin.ChangeUserRoleCommand;
+import main.java.by.epam.tattoo.command.common.ChangeLocaleCommand;
+import main.java.by.epam.tattoo.command.guest.LoginCommand;
+import main.java.by.epam.tattoo.command.guest.RegisterUserCommand;
+import main.java.by.epam.tattoo.command.manager.*;
+import main.java.by.epam.tattoo.command.registered.*;
+import main.java.by.epam.tattoo.command.user.DeleteOrderCommand;
+import main.java.by.epam.tattoo.command.user.RegisterOrderCommand;
+
 public enum CommandType {
     REGISTER(new RegisterUserCommand()),
 

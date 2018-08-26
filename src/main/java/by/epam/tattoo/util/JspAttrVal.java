@@ -5,10 +5,8 @@ public interface JspAttrVal {
     String CHANGED_PASSWORD = "changedPassword";
     String SIGNED_IN = "signedIn";
     String SIGNED_UP = "signedUp";
-    String ORDER_SUCCESS = "orderSuccess";
     String OFFER_SUCCESS = "offerSuccess";
     String ORDER_FAIL = "orderFail";
-    String OFFER_FAIL = "offerFail";
     String DELETE_USER_SUCCESS = "userDeleted";
     String SEARCH_FAIL = "searchFail";
     String DELETE_ORDER_FAIL = "deleteOrderFail";

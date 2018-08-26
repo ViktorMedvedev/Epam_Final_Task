@@ -79,7 +79,7 @@
                         </form>
                     </c:when>
                     <c:when test="${requestScope.message == 'signedIn'}">
-                        ${successSignIn} ${sessionScope.user.login}!
+                        <jsp:forward page="/app?command=home"/>
                     </c:when>
                     <c:when test="${requestScope.message == 'orderSuccess'}">
                         ${successOrder}

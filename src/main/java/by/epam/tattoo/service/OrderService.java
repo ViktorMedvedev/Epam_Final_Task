@@ -1,7 +1,7 @@
 package main.java.by.epam.tattoo.service;
 
 import main.java.by.epam.tattoo.dao.DaoException;
-import main.java.by.epam.tattoo.dao.order.OrderDao;
+import main.java.by.epam.tattoo.dao.impl.OrderDaoImpl;
 import main.java.by.epam.tattoo.entity.Order;
 import main.java.by.epam.tattoo.entity.Tattoo;
 import main.java.by.epam.tattoo.entity.Role;
@@ -13,7 +13,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class OrderService {
-    private OrderDao dao = new OrderDao();
+    private OrderDaoImpl dao = new OrderDaoImpl();
 
     public Order registerOrder(int userId, int tattooId) throws ServiceException {
         Order order = new Order(userId, tattooId, countDiscount(userId, tattooId));

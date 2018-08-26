@@ -41,7 +41,7 @@ public class ImageServlet extends HttpServlet {
             os.flush();
             os.close();
         } catch (ServiceException e) {
-           request.getRequestDispatcher(JspAddr.ERROR_PAGE).forward(request, response);
+            response.sendRedirect(JspAddr.ERROR_PAGE);
         }
     }
 }

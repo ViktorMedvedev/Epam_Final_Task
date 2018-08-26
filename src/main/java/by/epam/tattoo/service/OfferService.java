@@ -1,13 +1,13 @@
 package main.java.by.epam.tattoo.service;
 
 import main.java.by.epam.tattoo.dao.DaoException;
-import main.java.by.epam.tattoo.dao.offer.OfferDao;
+import main.java.by.epam.tattoo.dao.impl.OfferDaoImpl;
 import main.java.by.epam.tattoo.entity.Offer;
 
 import java.util.ArrayList;
 
 public class OfferService {
-    private OfferDao dao = new OfferDao();
+    private OfferDaoImpl dao = new OfferDaoImpl();
 
     public Offer registerOffer(int userId, byte[] image) throws ServiceException {
         Offer offer = new Offer(userId, image);
@@ -60,14 +60,6 @@ public class OfferService {
     public byte[] findTattooImage(String id) throws ServiceException {
         try {
             return dao.findTattooImageById(Integer.parseInt(id));
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public Offer findOfferById(int id) throws ServiceException {
-        try {
-            return dao.findOfferById(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

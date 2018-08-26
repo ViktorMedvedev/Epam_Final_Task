@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 @WebServlet(name = "MainController", urlPatterns = {"/app"})
 public class MainController extends HttpServlet {
@@ -31,9 +32,7 @@ public class MainController extends HttpServlet {
         try {
             Command command = CommandFactory.getInstance().defineCommand(commandName);
             String page = command.execute(request);
-            if (page!=null) {
-                request.getRequestDispatcher(page).forward(request, response);
-            }
+            request.getRequestDispatcher(Objects.requireNonNullElse(page, JspAddr.HOME_PAGE)).forward(request, response);
         } catch (CommandException e) {
             request.getRequestDispatcher(JspAddr.ERROR_PAGE).forward(request, response);
         }

@@ -1,7 +1,7 @@
 package main.java.by.epam.tattoo.service;
 
 import main.java.by.epam.tattoo.dao.DaoException;
-import main.java.by.epam.tattoo.dao.user.UserDao;
+import main.java.by.epam.tattoo.dao.impl.UserDaoImpl;
 import main.java.by.epam.tattoo.entity.Role;
 import main.java.by.epam.tattoo.entity.User;
 import main.java.by.epam.tattoo.util.ConstantHeap;
@@ -9,7 +9,7 @@ import main.java.by.epam.tattoo.util.ConstantHeap;
 import java.util.ArrayList;
 
 public class UserService {
-    private UserDao dao = new UserDao();
+    private UserDaoImpl dao = new UserDaoImpl();
 
     public User registerUser(String email, String login, String password) throws ServiceException {
         User user = new User(email, login, password);

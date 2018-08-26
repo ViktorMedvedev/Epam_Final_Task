@@ -32,7 +32,6 @@
     <div class="input-container">
         <form name="changePasswordForm" method="POST" action="app">
             <input type="hidden" name="command" value="change-password">
-            <input type="hidden" name="login" value="${sessionScope.user.login}">
             <script>
                 function checkPass()
                 {

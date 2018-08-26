@@ -13,10 +13,7 @@ public interface JspAddr {
     String USER_TABLE = "/userTable";
     String DELETE_ACCOUNT = "/deleteAccount";
     String UPLOAD_PHOTO_PAGE = "/uploadPhotoPage";
-    String SEARCH_PAGE = "/search";
-    String USER_ROOM = "/userRoom";
     String ORDER_DECISION_PAGE = "/orderDecision";
     String OFFER_PAGE = "/offerPage";
     String DELETE_TATTOO = "/deleteTattoo";
-    String UPLOAD_PHOTO_ADMIN_PAGE = "/uploadPhotoAdminPage";
 }
