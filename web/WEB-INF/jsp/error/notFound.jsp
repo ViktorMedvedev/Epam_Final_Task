@@ -7,11 +7,10 @@
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="locale.locale" var="locale"/>
     <title>Error 404</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
 <h2>404 error</h2><br/>
 Page not found.<br/>
-<a href="${pageContext.request.contextPath}/home">Return home page.</a>
+<a href="${pageContext.request.contextPath}/app?command=home">Return home page.</a>
 </body>
 </html>

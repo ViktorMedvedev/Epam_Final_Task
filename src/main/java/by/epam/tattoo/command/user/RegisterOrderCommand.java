@@ -22,7 +22,7 @@ public class RegisterOrderCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        if (AccessChecker.checkForNullSession(request)){
+        if (AccessChecker.checkForNullSession(request)||!AccessChecker.checkForUserSession(request)){
             return JspAddr.LOGIN_PAGE;
         }
         HttpSession session = request.getSession();

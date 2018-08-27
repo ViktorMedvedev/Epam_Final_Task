@@ -25,11 +25,6 @@
 <header>
     <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 </header>
-<c:choose>
-    <c:when test="${empty sessionScope.user}">
-        <jsp:forward page="/login"/>
-    </c:when>
-</c:choose>
 <div class="order-card-container">
     <div class="order-card">
         <div class="order-card_img-container">
@@ -65,14 +60,14 @@
                 </c:when>
             </c:choose>
             <c:choose>
-                <c:when test="${sessionScope.user.role != 'USER'}">
+                <c:when test="${not empty sessionScope.user.role && sessionScope.user.role != 'USER'}">
                     <form action="app" method="post">
                         <input type="hidden" name="command" value="delete-tattoo-page">
                         <input type="hidden" name="tattooId" value="${sessionScope.tattoo.id}">
                         <input type="submit" value="${delete}">
                     </form>
                 </c:when>
-                <c:when test="${sessionScope.user.role == 'USER'}">
+                <c:when test="${sessionScope.user.role != 'ADMIN'||sessionScope.user.role !='MODERATOR'}">
                     <c:choose>
                         <c:when test="${empty sessionScope.order}">
                             <form action="app" method="post">

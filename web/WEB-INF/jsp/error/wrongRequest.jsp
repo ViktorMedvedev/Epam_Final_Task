@@ -9,6 +9,6 @@
 <body>
 <h2>Error 400</h2>
 Wrong request!<br/>
-<a href="${pageContext.request.contextPath}/home">Return home page.</a>
+<a href="${pageContext.request.contextPath}/app?command=home">Return home page.</a>
 </body>
 </html>

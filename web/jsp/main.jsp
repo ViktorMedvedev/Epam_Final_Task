@@ -26,16 +26,10 @@
 <header>
     <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 </header>
-<c:choose>
-    <c:when test="${empty sessionScope.user}">
-        <jsp:forward page="/login"/>
-    </c:when>
-</c:choose>
 <jsp:include page="/WEB-INF/jsp/pageContainer.jsp"/>
 <div class="tattoo-card-container">
     <c:forEach var="tattoo" items="${sessionScope.tattoos}" varStatus="status">
         <div class='tatoo-card'>
-            <!--<div class="delete-button">X</div>-->
             <div class='img-container'>
                 <img src="image?imageId=${tattoo.id}&table=tattoo"/>
             </div>

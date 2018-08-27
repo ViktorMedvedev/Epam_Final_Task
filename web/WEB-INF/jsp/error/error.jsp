@@ -17,7 +17,7 @@
     Exception: ${pageContext.exception}
     <br/>
     Message from exception: ${pageContext.exception.message}
-    <a href="${pageContext.request.contextPath}/home">Return home page.</a>
+    <a href="${pageContext.request.contextPath}/app?command=home">Return home page.</a>
 </div>
 </body>
 </html>

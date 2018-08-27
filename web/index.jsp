@@ -6,6 +6,6 @@
   <title>Index</title>
 </head>
 <body>
-<jsp:forward page="/login"/>
+<jsp:forward page="/app?command=home"/>
 </body>
 </html>

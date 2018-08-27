@@ -27,11 +27,6 @@
 <header>
     <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 </header>
-<c:choose>
-    <c:when test="${not empty sessionScope.user}">
-        <jsp:forward page="/app?command=home"/>
-    </c:when>
-</c:choose>
 
 <div class="container">
     <div class="input-container">

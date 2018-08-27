@@ -15,6 +15,7 @@
     <fmt:message bundle="${locale}" key="locale.lang.text.russian" var="ru"/>
     <fmt:message bundle="${locale}" key="locale.header.userRoom" var="userRoom"/>
     <fmt:message bundle="${locale}" key="locale.action.search" var="search"/>
+    <fmt:message bundle="${locale}" key="locale.user.button.signin" var="signIn"/>
 
     <fmt:message bundle="${locale}" key="locale.select.style.All" var="All"/>
     <fmt:message bundle="${locale}" key="locale.select.style.Dotwork" var="Dotwork"/>
@@ -53,8 +54,7 @@
 </head>
 <body>
 <div class="header">
-    <c:choose>
-        <c:when test="${not empty sessionScope.user}">
+
             <form action="app">
                 <input type="hidden" name="command" value="home">
                 <input type="hidden" name="page" value="1">
@@ -64,19 +64,9 @@
                     <input type="image" src="../../res/img/logo.png">
                 </div>
             </form>
-        </c:when>
-        <c:otherwise>
-            <form action="login">
-                <div class="logo-container">
-                    <input type="image" src="../../res/img/logo.png">
-                </div>
-            </form>
-        </c:otherwise>
-    </c:choose>
+
 
     <div class="search-container">
-        <c:choose>
-            <c:when test="${not empty sessionScope.user}">
                 <form class="search" action="app">
                     <input type="hidden" name="command" value="home">
                     <select name="style">
@@ -118,8 +108,6 @@
                     </select>
                     <input type="submit" value=${search}>
                 </form>
-            </c:when>
-        </c:choose>
     </div>
     <div class="lang-button-container">
         <form action="app">
@@ -136,6 +124,11 @@
                     <input class="lang-button" type="submit" value=${userRoom}>
                 </form>
             </c:when>
+            <c:otherwise>
+                <form action="login">
+                    <input class="lang-button" type="submit" value=${signIn}>
+                </form>
+            </c:otherwise>
         </c:choose>
     </div>
 

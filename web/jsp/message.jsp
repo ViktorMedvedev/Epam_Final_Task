@@ -129,7 +129,6 @@
                     <input class="button button-blue" type="submit" value=${homePage}>
                         ${requestScope.message = null}
                         ${requestScope.wrongData = null}
-
                 </form>
                 <form action="userRoom">
                     <input class="button button-blue" type="submit" value=${userRoom}>
@@ -138,18 +137,27 @@
                 </form>
             </c:when>
             <c:when test="${empty sessionScope.user}">
+                <c:choose>
+                    <c:when test="${requestScope.message == 'changedLocale'}">
+                        ${successChangeLocale}
+                        <form action="app">
+                            <input type="hidden" name="command" value="home">
+                            <input type="hidden" name="style" value="${All}">
+                            <input type="hidden" name="size" value="${All}">
+                            <br/>
+                            <input class="button button-blue" type="submit" value=${homePage}>
+                                ${requestScope.message = null}
+                                ${requestScope.wrongData = null}
+                        </form>
+                    </c:when>
+                    <c:when test="${requestScope.message == 'signedUp'}">
+                        ${successSignUp}
+                    </c:when>
+                    <c:when test="${empty requestScope.message}">
+                        <jsp:forward page="/login"/>
+                    </c:when>
+                </c:choose>
                 <form action="login">
-                    <c:choose>
-                        <c:when test="${requestScope.message == 'changedLocale'}">
-                            ${successChangeLocale}
-                        </c:when>
-                        <c:when test="${requestScope.message == 'signedUp'}">
-                            ${successSignUp}
-                        </c:when>
-                        <c:when test="${empty requestScope.message}">
-                            <jsp:forward page="/login"/>
-                        </c:when>
-                    </c:choose>
                     <br/>
                     <input class="button button-blue" type="submit" value=${signIn}>
                         ${requestScope.message = null}
