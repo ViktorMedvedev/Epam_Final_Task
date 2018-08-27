@@ -26,7 +26,7 @@
     <fmt:message bundle="${locale}" key="locale.page.toUserRoom" var="userRoom"/>
 
     <link rel="stylesheet" href="../css/style.css">
-    <title>User room</title>
+    <title>${pageTitle}</title>
 </head>
 <body>
 <header>

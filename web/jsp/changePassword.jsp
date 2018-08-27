@@ -17,7 +17,7 @@
     <fmt:message bundle="${locale}" key="locale.message.passwordsDoNotMatch" var="passwordsDoNotMatch"/>
     <fmt:message bundle="${locale}" key="locale.user.password.formatMessage" var="passwordFormatMessage"/>
     <link rel="stylesheet" href="../css/style.css">
-    <title>Change password</title>
+    <title>${pageTitle}</title>
 </head>
 <body>
 <header>
