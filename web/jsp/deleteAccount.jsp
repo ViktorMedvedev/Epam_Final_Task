@@ -12,8 +12,9 @@
     <fmt:message bundle="${locale}" key="locale.userRoom.button.delete" var="delete"/>
     <fmt:message bundle="${locale}" key="locale.page.toUserList" var="userList"/>
     <fmt:message bundle="${locale}" key="locale.page.toUserRoom" var="userRoom"/>
-    <title>${pageTitle} | Tattoo Parlor</title>
+
     <link rel="stylesheet" href="../css/style.css">
+    <title>${pageTitle}</title>
 </head>
 <body>
 <header>

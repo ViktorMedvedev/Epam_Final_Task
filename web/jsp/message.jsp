@@ -30,9 +30,8 @@
     <fmt:message bundle="${locale}" key="locale.select.size.All" var="All"/>
     <fmt:message bundle="${locale}" key="locale.action.uploadPhoto" var="upload"/>
 
-
-    <title>${pageTitle} | Tattoo Parlor</title>
     <link rel="stylesheet" href="../css/style.css">
+    <title>${pageTitle}</title>
 
 </head>
 <body>
@@ -42,128 +41,96 @@
 <div class="container">
     <div class="input-container">
         <c:choose>
-            <c:when test="${not empty sessionScope.user}">
-                <c:choose>
-                    <c:when test="${requestScope.message == 'changedPassword'}">
-                        ${successChangePassword}
-                    </c:when>
-                    <c:when test="${requestScope.message == 'changedLocale'}">
-                        ${successChangeLocale}
-                    </c:when>
-                    <c:when test="${requestScope.message == 'searchFail'}">
-                        ${searchFail}
-                        <form action="uploadPhotoPage" method="post">
-                            <input class="button button-blue" type="submit" value=${upload}>
-                                ${sessionScope.message = null}
-                                ${sessionScope.wrongData = null}
-                        </form>
-                    </c:when>
-                    <c:when test="${requestScope.message == 'offerAccepted'}">
-                        ${acceptOffer}
-                        <form action="app" method="post">
-                            <input type="hidden" name="command" value="offer-list">
-                            <br/>
-                            <input class="button button-blue" type="submit" value=${orderList}>
-                                ${sessionScope.message = null}
-                                ${sessionScope.wrongData = null}
-                        </form>
-                    </c:when>
-                    <c:when test="${requestScope.message == 'offerDeclined'}">
-                        ${declineOffer}
-                        <form action="app" method="post">
-                            <input type="hidden" name="command" value="offer-list">
-                            <br/>
-                            <input class="button button-blue" type="submit" value=${offerList}>
-                                ${sessionScope.message = null}
-                                ${sessionScope.wrongData = null}
-                        </form>
-                    </c:when>
-                    <c:when test="${requestScope.message == 'signedIn'}">
-                        <jsp:forward page="/app?command=home"/>
-                    </c:when>
-                    <c:when test="${requestScope.message == 'orderSuccess'}">
-                        ${successOrder}
-                        <form action="app">
-                            <input type="hidden" name="command" value="order-list">
-                            <br/>
-                            <input class="button button-blue" type="submit" value="${orderList}">
-                                ${sessionScope.message = null}
-                                ${sessionScope.wrongData = null}
-                        </form>
-                    </c:when>
-                    <c:when test="${requestScope.message == 'offerSuccess'}">
-                        ${successOffer}
-                    </c:when>
-                    <c:when test="${requestScope.message == 'deleteOrderFail'}">
-                        ${deleteOrderFail}
-                    </c:when>
-                    <c:when test="${requestScope.message == 'orderFail'}">
-                        ${failOrder}
-                        <form action="app">
-                            <input type="hidden" name="command" value="order-list">
-                            <br/>
-                            <input class="button button-blue" type="submit" value=${orderList}>
-                                ${sessionScope.message = null}
-                                ${sessionScope.wrongData = null}
-                        </form>
-                    </c:when>
-                    <c:when test="${requestScope.message == 'userDeleted'}">
-                        ${userDeleted}
-                        <form action="app" method="post">
-                            <input type="hidden" name="command" value="user-list">
-                            <br/>
-                            <input class="button button-blue" type="submit" value=${userList}>
-                                ${requestScope.message = null}
-                                ${requestScope.wrongData = null}
-                        </form>
-                    </c:when>
-                    <c:when test="${requestScope.message == 'tattooDeleted'}">
-                        ${tattooDeleted}
-                    </c:when>
-                </c:choose>
-                <form action="app">
-                    <input type="hidden" name="command" value="home">
-                    <input type="hidden" name="style" value="${All}">
-                    <input type="hidden" name="size" value="${All}">
-                    <br/>
-                    <input class="button button-blue" type="submit" value=${homePage}>
-                        ${requestScope.message = null}
-                        ${requestScope.wrongData = null}
-                </form>
-                <form action="userRoom">
-                    <input class="button button-blue" type="submit" value=${userRoom}>
-                        ${requestScope.message = null}
-                        ${requestScope.wrongData = null}
+            <c:when test="${requestScope.message == 'changedPassword'}">
+                ${successChangePassword}
+            </c:when>
+            <c:when test="${requestScope.message == 'changedLocale'}">
+                ${successChangeLocale}
+            </c:when>
+            <c:when test="${requestScope.message == 'searchFail'}">
+                ${searchFail}
+                <form action="uploadPhotoPage" method="post">
+                    <input class="button button-blue" type="submit" value=${upload}>
                 </form>
             </c:when>
+            <c:when test="${requestScope.message == 'offerAccepted'}">
+                ${acceptOffer}
+                <form action="app" method="post">
+                    <input type="hidden" name="command" value="offer-list">
+                    <br/>
+                    <input class="button button-blue" type="submit" value=${orderList}>
+                </form>
+            </c:when>
+            <c:when test="${requestScope.message == 'offerDeclined'}">
+                ${declineOffer}
+                <form action="app" method="post">
+                    <input type="hidden" name="command" value="offer-list">
+                    <br/>
+                    <input class="button button-blue" type="submit" value=${offerList}>
+                </form>
+            </c:when>
+            <c:when test="${requestScope.message == 'signedIn'}">
+                <jsp:forward page="/app?command=home"/>
+            </c:when>
+            <c:when test="${requestScope.message == 'orderSuccess'}">
+                ${successOrder}
+                <form action="app">
+                    <input type="hidden" name="command" value="order-list">
+                    <br/>
+                    <input class="button button-blue" type="submit" value="${orderList}">
+                </form>
+            </c:when>
+            <c:when test="${requestScope.message == 'offerSuccess'}">
+                ${successOffer}
+            </c:when>
+            <c:when test="${requestScope.message == 'deleteOrderFail'}">
+                ${deleteOrderFail}
+            </c:when>
+            <c:when test="${requestScope.message == 'orderFail'}">
+                ${failOrder}
+                <form action="app">
+                    <input type="hidden" name="command" value="order-list">
+                    <br/>
+                    <input class="button button-blue" type="submit" value=${orderList}>
+                </form>
+            </c:when>
+            <c:when test="${requestScope.message == 'userDeleted'}">
+                ${userDeleted}
+                <form action="app" method="post">
+                    <input type="hidden" name="command" value="user-list">
+                    <br/>
+                    <input class="button button-blue" type="submit" value=${userList}>
+                </form>
+            </c:when>
+            <c:when test="${requestScope.message == 'tattooDeleted'}">
+                ${tattooDeleted}
+            </c:when>
+            <c:when test="${requestScope.message == 'signedUp'}">
+                ${successSignUp}
+            </c:when>
+            <c:when test="${empty requestScope.message}">
+                <jsp:forward page="/login"/>
+            </c:when>
+        </c:choose>
+        <form action="app">
+            <input type="hidden" name="command" value="home">
+            <input type="hidden" name="style" value="${All}">
+            <input type="hidden" name="size" value="${All}">
+            <br/>
+            <input class="button button-blue" type="submit" value=${homePage}>
+        </form>
+        <c:choose>
             <c:when test="${empty sessionScope.user}">
-                <c:choose>
-                    <c:when test="${requestScope.message == 'changedLocale'}">
-                        ${successChangeLocale}
-                        <form action="app">
-                            <input type="hidden" name="command" value="home">
-                            <input type="hidden" name="style" value="${All}">
-                            <input type="hidden" name="size" value="${All}">
-                            <br/>
-                            <input class="button button-blue" type="submit" value=${homePage}>
-                                ${requestScope.message = null}
-                                ${requestScope.wrongData = null}
-                        </form>
-                    </c:when>
-                    <c:when test="${requestScope.message == 'signedUp'}">
-                        ${successSignUp}
-                    </c:when>
-                    <c:when test="${empty requestScope.message}">
-                        <jsp:forward page="/login"/>
-                    </c:when>
-                </c:choose>
                 <form action="login">
                     <br/>
                     <input class="button button-blue" type="submit" value=${signIn}>
-                        ${requestScope.message = null}
-                        ${requestScope.wrongData = null}
                 </form>
             </c:when>
+            <c:otherwise>
+                <form action="userRoom">
+                    <input class="button button-blue" type="submit" value=${userRoom}>
+                </form>
+            </c:otherwise>
         </c:choose>
     </div>
 </div>

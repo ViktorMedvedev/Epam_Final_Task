@@ -4,12 +4,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Личный кабинет</title>
-    <link rel="stylesheet" href="../css/style.css">
+
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="resources.locale.locale" var="locale"/>
 
-    <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.page.title.userRoom" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.user.label.email" var="emailLabel"/>
     <fmt:message bundle="${locale}" key="locale.user.label.login" var="loginLabel"/>
     <fmt:message bundle="${locale}" key="locale.user.label.discount" var="discountLabel"/>
@@ -25,6 +24,9 @@
     <fmt:message bundle="${locale}" key="locale.userRoom.button.delete" var="delete"/>
     <fmt:message bundle="${locale}" key="locale.action.uploadPhoto" var="upload"/>
     <fmt:message bundle="${locale}" key="locale.page.toUserRoom" var="userRoom"/>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <title>User room</title>
 </head>
 <body>
 <header>

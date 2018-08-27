@@ -6,6 +6,7 @@
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="resources.locale.locale" var="locale"/>
 
+    <fmt:message bundle="${locale}" key="locale.pa" var="style"/>
     <fmt:message bundle="${locale}" key="locale.card.info.style" var="style"/>
     <fmt:message bundle="${locale}" key="locale.card.info.size" var="size"/>
     <fmt:message bundle="${locale}" key="locale.card.info.price" var="price"/>

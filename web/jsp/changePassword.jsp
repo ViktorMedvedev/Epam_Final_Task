@@ -7,7 +7,7 @@
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="resources.locale.locale" var="locale"/>
 
-    <fmt:message bundle="${locale}" key="locale.page.title.auth" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.userRoom.label.changePassword" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.page.toUserRoom" var="userRoom"/>
     <fmt:message bundle="${locale}" key="locale.password.oldPassword" var="oldPassword"/>
     <fmt:message bundle="${locale}" key="locale.password.newPassword" var="newPassword"/>
@@ -16,8 +16,8 @@
     <fmt:message bundle="${locale}" key="locale.user.label.confirmPassword" var="confirmPassword"/>
     <fmt:message bundle="${locale}" key="locale.message.passwordsDoNotMatch" var="passwordsDoNotMatch"/>
     <fmt:message bundle="${locale}" key="locale.user.password.formatMessage" var="passwordFormatMessage"/>
-    <title>${pageTitle} | Tattoo Parlor</title>
     <link rel="stylesheet" href="../css/style.css">
+    <title>Change password</title>
 </head>
 <body>
 <header>

@@ -6,15 +6,16 @@
     <meta charset="UTF-8">
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="resources.locale.locale" var="locale"/>
-    <fmt:message bundle="${locale}" key="locale.userRoom.label.delete" var="pageTitle"/>
+    <fmt:message bundle="${locale}" key="locale.action.delete" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.message.attentionDeleteTattoo" var="warning"/>
     <fmt:message bundle="${locale}" key="locale.action.delete" var="delete"/>
     <fmt:message bundle="${locale}" key="locale.page.toUserList" var="userList"/>
     <fmt:message bundle="${locale}" key="locale.page.toHomePage" var="homePage"/>
     <fmt:message bundle="${locale}" key="locale.select.style.All" var="All"/>
 
-    <title>${pageTitle} | Tattoo Parlor</title>
+
     <link rel="stylesheet" href="../css/style.css">
+    <title>${pageTitle}</title>
 </head>
 <body>
 <header>

@@ -56,7 +56,7 @@
     <fmt:message bundle="${locale}" key="locale.select.size.size15" var="size15"/>
 
 
-    <title>${pageTitle} | Tattoo Parlor</title>
+    <title>${pageTitle}</title>
     <link rel="stylesheet" href="../css/style.css">
 
 </head>

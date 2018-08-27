@@ -54,7 +54,6 @@
 </head>
 <body>
 <div class="header">
-
             <form action="app">
                 <input type="hidden" name="command" value="home">
                 <input type="hidden" name="page" value="1">
@@ -64,8 +63,6 @@
                     <input type="image" src="../../res/img/logo.png">
                 </div>
             </form>
-
-
     <div class="search-container">
                 <form class="search" action="app">
                     <input type="hidden" name="command" value="home">
@@ -131,7 +128,6 @@
             </c:otherwise>
         </c:choose>
     </div>
-
 </div>
 </body>
 </html>

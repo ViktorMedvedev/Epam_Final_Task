@@ -22,7 +22,7 @@
     <fmt:message bundle="${locale}" key="locale.user.login.formatMessage" var="loginFormatMessage"/>
     <fmt:message bundle="${locale}" key="locale.user.password.formatMessage" var="passwordFormatMessage"/>
     <fmt:message bundle="${locale}" key="locale.message.passwordsDoNotMatch" var="passwordsDoNotMatch"/>    <fmt:message bundle="${locale}" key="locale.message.passwordsDoNotMatch" var="passwordsDoNotMatch"/>
-    <title>${pageTitle} | tattoo parlor </title>
+    <title>${pageTitle}</title>
 </head>
 <body>
 <header>

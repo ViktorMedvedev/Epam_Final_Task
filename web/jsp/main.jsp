@@ -19,7 +19,7 @@
     <fmt:message bundle="${locale}" key="locale.card.button.open" var="open"/>
     <fmt:message bundle="${locale}" key="locale.page.title.main" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.message.searchFail" var="searchFail"/>
-    <title>${pageTitle} | tattoo Parlor</title>
+    <title>${pageTitle}</title>
 
 </head>
 <body>

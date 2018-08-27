@@ -6,6 +6,7 @@
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="resources.locale.locale" var="locale"/>
 
+    <fmt:message bundle="${locale}" key="locale.action.order" var="pageTitle"/>
     <fmt:message bundle="${locale}" key="locale.card.info.style" var="style"/>
     <fmt:message bundle="${locale}" key="locale.card.info.size" var="size"/>
     <fmt:message bundle="${locale}" key="locale.action.acceptOrder" var="accept"/>
@@ -54,10 +55,11 @@
     <fmt:message bundle="${locale}" key="locale.select.size.size14" var="size14"/>
     <fmt:message bundle="${locale}" key="locale.select.size.size15" var="size15"/>
     <meta charset="UTF-8">
-    <title>Заказать</title>
+
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/jquery-3.3.1.js"></script>
     <script src="../js/main.js"></script>
+    <title>${pageTitle}</title>
 </head>
 <body>
 <header>
