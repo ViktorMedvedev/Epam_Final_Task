@@ -144,12 +144,12 @@
                 <input type="submit" value="${accept}"/>
             </form>
             <form action="app" method="post">
-                <input type="hidden" name="command" value="offer-list">
-                <input type="submit" value=${offered}/>
-            </form>
-            <form action="app" method="post">
                 <input type="hidden" name="command" value="decline-offer">
                 <input class="gray" type="submit" value="${decline}"/>
+            </form>
+            <form action="app" method="post">
+                <input type="hidden" name="command" value="offer-list">
+                <input type="submit" value=${offered}/>
             </form>
         </div>
     </div>
