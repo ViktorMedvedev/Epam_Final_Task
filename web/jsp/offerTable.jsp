@@ -32,7 +32,6 @@
         <p>${pageTitle}:</p>
         <c:choose>
             <c:when test="${not empty sessionScope.offers}">
-                <jsp:include page="/WEB-INF/jsp/pageContainer.jsp"/>
                 <table style="font-style: normal; color:white">
                     <tr>
                         <th>${offerId}</th>

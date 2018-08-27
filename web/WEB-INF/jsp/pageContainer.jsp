@@ -16,18 +16,12 @@
 </head>
 <body>
 <div class="page-number-container">
-    <c:if test="${empty requestScope.page}">
-        ${requestScope.page = 1}
-    </c:if>
     <c:if test="${requestScope.page > 1}">
         <form action="app">
             <input type="hidden" name="command" value="home">
             <input type="hidden" name="page" value="${requestScope.page - 1}">
             <input class="page-number-blue" type="submit" value="${previous}">
         </form>
-    </c:if>
-    <c:if test="${requestScope.page < 1}">
-        ${requestScope.page = 1}
     </c:if>
     <c:if test="${requestScope.page > sessionScope.noOfPages}">
         ${requestScope.page = sessionScope.noOfPages}

@@ -59,14 +59,15 @@ public class ConnectionPool {
             throw new RuntimeException("Couldn't register driver", e);
         }
     }
+
     private void initDatabase() {
 //        ResourceBundle bundle = ResourceBundle.getBundle("/resources/database/database");
 //        url = bundle.getString("database.url");
 //        user = bundle.getString("database.user");
 //        password = bundle.getString("database.password");
         url = DataBaseInfo.URL;
-        password=DataBaseInfo.PASSWORD;
-        user=DataBaseInfo.USER;
+        password = DataBaseInfo.PASSWORD;
+        user = DataBaseInfo.USER;
     }
 
     private void initPool() {
@@ -80,8 +81,8 @@ public class ConnectionPool {
             }
         }
         if (freeConnections.isEmpty()) {
-            logger.fatal("Couldn't init connection connection");
-            throw new RuntimeException("Couldn't init connection connection");
+            logger.fatal("Couldn't init connection pool");
+            throw new RuntimeException("Couldn't init connection pool");
         }
         if (freeConnections.size() == POOL_SIZE) {
             logger.log(Level.INFO, "Successfully initialized connection pool");
@@ -126,19 +127,22 @@ public class ConnectionPool {
 
     public void closeConnectionPool() throws ConnectionPoolException {
         ProxyConnection connection;
-        int currentPoolSize = freeConnections.size() + busyConnections.size();
-        for (int i = 0; i < currentPoolSize; i++) {
-            try {
+        try {
+            for (int i = 0; i < busyConnections.size(); i++) {
+                connection = busyConnections.poll();
+                connection.closeConnection();
+            }
+            for (int i = 0; i < freeConnections.size(); i++) {
                 connection = freeConnections.take();
                 if (!connection.getAutoCommit()) {
                     connection.commit();
+                    connection.closeConnection();
                 }
-                connection.closeConnection();
-            } catch (InterruptedException e) {
-                logger.log(Level.ERROR, e);
-            } catch (SQLException e) {
-                throw new ConnectionPoolException("Couldn't close connection", e);
             }
+        } catch (InterruptedException e) {
+            logger.log(Level.ERROR, e);
+        } catch (SQLException e) {
+            throw new ConnectionPoolException("Couldn't close connection", e);
         }
         deregisterDrivers();
     }

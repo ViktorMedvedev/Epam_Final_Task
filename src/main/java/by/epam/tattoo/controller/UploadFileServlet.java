@@ -46,7 +46,7 @@ public class UploadFileServlet extends HttpServlet {
                 if (fileAsByteArray.length > 0) {
                     Offer offer = service.registerOffer(user.getId(), fileAsByteArray);
                     if (offer != null) {
-                        request.setAttribute(JspAttr.MESSAGE, JspAttrVal.OFFER_SUCCESS);
+                        session.setAttribute(JspAttr.MESSAGE, JspAttrVal.OFFER_SUCCESS);
                         response.sendRedirect(JspAddr.MESSAGE_PAGE);
                     }
                 } else {
@@ -65,7 +65,7 @@ public class UploadFileServlet extends HttpServlet {
                     TattooService tattooService = new TattooService();
                     Tattoo tattoo = tattooService.registerTattoo(style, size, price, fileAsByteArray);
                     if (tattoo!=null){
-                        request.setAttribute(JspAttr.MESSAGE, JspAttrVal.OFFER_ACCEPTED);
+                        session.setAttribute(JspAttr.MESSAGE, JspAttrVal.OFFER_ACCEPTED);
                         response.sendRedirect(JspAddr.MESSAGE_PAGE);
                     }else {
                         request.setAttribute(JspAttr.WRONG_DATA, "wrong");

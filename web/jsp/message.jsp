@@ -51,22 +51,23 @@
                 ${searchFail}
                 <form action="uploadPhotoPage" method="post">
                     <input class="button button-blue" type="submit" value=${upload}>
+                        ${sessionScope.offerSuccess = null}
                 </form>
             </c:when>
             <c:when test="${requestScope.message == 'offerAccepted'}">
                 ${acceptOffer}
                 <form action="app" method="post">
                     <input type="hidden" name="command" value="offer-list">
-                    <br/>
-                    <input class="button button-blue" type="submit" value=${orderList}>
+                    <input class="button button-blue" type="submit" value=${offerList}>
+                        ${sessionScope.offerSuccess = null}
                 </form>
             </c:when>
             <c:when test="${requestScope.message == 'offerDeclined'}">
                 ${declineOffer}
                 <form action="app" method="post">
                     <input type="hidden" name="command" value="offer-list">
-                    <br/>
                     <input class="button button-blue" type="submit" value=${offerList}>
+                        ${sessionScope.offerSuccess = null}
                 </form>
             </c:when>
             <c:when test="${requestScope.message == 'signedIn'}">
@@ -76,12 +77,13 @@
                 ${successOrder}
                 <form action="app">
                     <input type="hidden" name="command" value="order-list">
-                    <br/>
                     <input class="button button-blue" type="submit" value="${orderList}">
+                        ${sessionScope.offerSuccess = null}
                 </form>
             </c:when>
-            <c:when test="${requestScope.message == 'offerSuccess'}">
+            <c:when test="${sessionScope.message == 'offerSuccess'}">
                 ${successOffer}
+
             </c:when>
             <c:when test="${requestScope.message == 'deleteOrderFail'}">
                 ${deleteOrderFail}
@@ -90,16 +92,16 @@
                 ${failOrder}
                 <form action="app">
                     <input type="hidden" name="command" value="order-list">
-                    <br/>
                     <input class="button button-blue" type="submit" value=${orderList}>
+                        ${sessionScope.offerSuccess = null}
                 </form>
             </c:when>
             <c:when test="${requestScope.message == 'userDeleted'}">
                 ${userDeleted}
                 <form action="app" method="post">
                     <input type="hidden" name="command" value="user-list">
-                    <br/>
                     <input class="button button-blue" type="submit" value=${userList}>
+                        ${sessionScope.offerSuccess = null}
                 </form>
             </c:when>
             <c:when test="${requestScope.message == 'tattooDeleted'}">
@@ -116,22 +118,24 @@
             <input type="hidden" name="command" value="home">
             <input type="hidden" name="style" value="${All}">
             <input type="hidden" name="size" value="${All}">
-            <br/>
             <input class="button button-blue" type="submit" value=${homePage}>
+            ${sessionScope.offerSuccess = null}
         </form>
         <c:choose>
             <c:when test="${empty sessionScope.user}">
                 <form action="login">
-                    <br/>
                     <input class="button button-blue" type="submit" value=${signIn}>
+                        ${sessionScope.offerSuccess = null}
                 </form>
             </c:when>
             <c:otherwise>
                 <form action="userRoom">
                     <input class="button button-blue" type="submit" value=${userRoom}>
+                        ${sessionScope.offerSuccess = null}
                 </form>
             </c:otherwise>
         </c:choose>
+
     </div>
 </div>
 <footer>

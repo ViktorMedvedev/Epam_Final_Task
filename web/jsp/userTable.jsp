@@ -32,7 +32,6 @@
 <div class="info-table-container">
     <div class="info-table">
         <p>${pageTitle}:</p>
-        <jsp:include page="/WEB-INF/jsp/pageContainer.jsp"/>
         <table style="font-style: normal; color:white">
             <tr>
                 <th>${userId}</th>

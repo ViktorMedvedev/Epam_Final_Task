@@ -52,7 +52,6 @@
                    title="${passwordFormatMessage}"
                    required>
             <input class="button button-blue" type="submit" value=${button}>
-            <br/>
             <c:choose>
                 <c:when test="${not empty requestScope.wrongData}">
                     ${authFailMessage}

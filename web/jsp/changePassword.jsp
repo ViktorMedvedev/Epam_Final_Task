@@ -17,6 +17,8 @@
     <fmt:message bundle="${locale}" key="locale.message.passwordsDoNotMatch" var="passwordsDoNotMatch"/>
     <fmt:message bundle="${locale}" key="locale.user.password.formatMessage" var="passwordFormatMessage"/>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/jquery-3.3.1.js"></script>
+    <script src="../js/main.js"></script>
     <title>${pageTitle}</title>
 </head>
 <body>
@@ -32,22 +34,6 @@
     <div class="input-container">
         <form name="changePasswordForm" method="POST" action="app">
             <input type="hidden" name="command" value="change-password">
-            <script>
-                function checkPass()
-                {
-                    var pass1 = document.getElementById('pass1');
-                    var pass2 = document.getElementById('pass2');
-                    var goodColor = "#66cc66";
-                    var badColor = "#ff6666";
-                    if(pass1.value === pass2.value){
-                        pass2.style.backgroundColor = goodColor;
-                        message.style.color = goodColor;
-                    }else{
-                        pass2.style.backgroundColor = badColor;
-                        message.style.color = badColor;
-                    }
-                }
-            </script>
             <span>${oldPassword}</span>
             <input type="password"
                    name="oldPassword"
@@ -80,7 +66,6 @@
                     ${failMessage}
                 </c:when>
             </c:choose>
-            <br/>
         </form>
         <form action="userRoom">
             <input class="button button-gray" type="submit" value=${userRoom}>

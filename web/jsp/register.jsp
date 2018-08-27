@@ -5,8 +5,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/jquery-3.3.1.js"></script>
+    <script src="../js/main.js"></script>
     <fmt:setLocale value="${sessionScope.local}"/>
     <fmt:setBundle basename="resources.locale.locale" var="locale"/>
 
@@ -21,7 +22,7 @@
     <fmt:message bundle="${locale}" key="locale.user.register.fail" var="registerFailMessage"/>
     <fmt:message bundle="${locale}" key="locale.user.login.formatMessage" var="loginFormatMessage"/>
     <fmt:message bundle="${locale}" key="locale.user.password.formatMessage" var="passwordFormatMessage"/>
-    <fmt:message bundle="${locale}" key="locale.message.passwordsDoNotMatch" var="passwordsDoNotMatch"/>    <fmt:message bundle="${locale}" key="locale.message.passwordsDoNotMatch" var="passwordsDoNotMatch"/>
+    <fmt:message bundle="${locale}" key="locale.message.passwordsDoNotMatch" var="passwordsDoNotMatch"/>
     <title>${pageTitle}</title>
 </head>
 <body>
@@ -37,22 +38,6 @@
     <div class="input-container">
         <form name="registerForm" method="POST" action="app">
             <input type="hidden" name="command" value="register"/>
-            <script>
-                function checkPass()
-                {
-                    var pass1 = document.getElementById('pass1');
-                    var pass2 = document.getElementById('pass2');
-                    var goodColor = "#66cc66";
-                    var badColor = "#ff6666";
-                    if(pass1.value === pass2.value){
-                        pass2.style.backgroundColor = goodColor;
-                        message.style.color = goodColor;
-                    }else{
-                        pass2.style.backgroundColor = badColor;
-                        message.style.color = badColor;
-                    }
-                }
-            </script>
             <span>${email}</span>
             <input type="email" name="email"
                    maxlength="60"
