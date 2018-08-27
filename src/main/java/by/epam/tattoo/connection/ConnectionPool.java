@@ -84,7 +84,7 @@ public class ConnectionPool {
             throw new RuntimeException("Couldn't init connection connection");
         }
         if (freeConnections.size() == POOL_SIZE) {
-            logger.log(Level.INFO, "Successfully initialized connection connection");
+            logger.log(Level.INFO, "Successfully initialized connection pool");
         }
 
     }
